@@ -1,10 +1,12 @@
 <!doctype html>
 <html ng-app="components">
   <head>
+    <meta charset="utf-8">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
     <script src="components.js"></script>
     <script src="beers.js"></script>
     <script src="customer.js"></script>
+    <script src="property.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css">
   </head>
   <body>
@@ -38,10 +40,34 @@
           <pre>master = {{master | json}}</pre>
         </div>
       </pane>
-      <pane title="Localization">
-        Date: {{ '2012-04-01' | date:'fullDate' }} <br>
-        Currency: {{ 123456 | currency }} <br>
-        Number: {{ 98765.4321 | number }} <br>
+      <pane title="Liegenschaft">
+        <div ng-controller="Property">
+          <form novalidate class="form-horizontal">
+            <div class="control-group">
+              <label class="control-label" for="property_number">Liegenschaftsnummer</label>
+              <div class="controls">
+                <input type="text" id="property_number" placeholder="Liegenschaftsnummer" ng-model="property.number">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="street">Straße</label>
+              <div class="controls">
+                <input type="text" id="street" placeholder="Straße" ng-model="property.street">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="name">Ort</label>
+              <div class="controls">
+                <input type="text" id="ort" placeholder="Ort" ng-model="property.city">
+              </div>
+            </div>
+
+            <button ng-click="reset()">RESET</button>
+            <button ng-click="update(property)">SAVE</button>
+          </form>
+          <pre>form = {{property | json}}</pre>
+          <pre>master = {{master | json}}</pre>
+        </div>
       </pane>
       <pane title="Pluralization">
         <div ng-controller="BeerCounter">
