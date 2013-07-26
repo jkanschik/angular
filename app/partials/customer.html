@@ -1,0 +1,25 @@
+<form novalidate class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label" for="customer_number">Kundennummer</label>
+    <div class="controls">
+      <input type="text" id="customer_number" placeholder="Kundennummer" ng-model="customer.number">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="group_number">Konzernnummer</label>
+    <div class="controls">
+      <input type="text" id="group_number" placeholder="Konzernnummer" ng-model="customer.group_number">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="name">Name</label>
+    <div class="controls">
+      <input type="text" id="name" placeholder="Name" ng-model="customer.name">
+    </div>
+  </div>
+
+  <button ng-click="reset()">RESET</button>
+  <button ng-click="update(customer)">SAVE</button>
+</form>
+<pre>form = {{customer | json}}</pre>
+<pre>master = {{master | json}}</pre>

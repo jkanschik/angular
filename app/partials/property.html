@@ -1,0 +1,25 @@
+<form novalidate class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label" for="property_number">Liegenschaftsnummer</label>
+    <div class="controls">
+      <input type="text" id="property_number" placeholder="Liegenschaftsnummer" ng-model="property.number">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="street">Straße</label>
+    <div class="controls">
+      <input type="text" id="street" placeholder="Straße" ng-model="property.street">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="name">Ort</label>
+    <div class="controls">
+      <input type="text" id="ort" placeholder="Ort" ng-model="property.city">
+    </div>
+  </div>
+
+  <button ng-click="reset()">RESET</button>
+  <button ng-click="update(property)">SAVE</button>
+</form>
+<pre>form = {{property | json}}</pre>
+<pre>master = {{master | json}}</pre>

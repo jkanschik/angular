@@ -1,0 +1,34 @@
+<input type="text" ng-model="search" class="search-query" placeholder="Search">
+
+<a href="" ng-click="setDefaults()">Set to defaults</a>
+
+<table class="table table-striped table-condensed">
+  <thead>
+    <tr>
+      <th>Bezeichnung</th>
+      <th>
+        <a href="" ng-click="new(); adding = true"><i class="icon-plus-sign"></i></a>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="level in levels | filter: search">
+      <td>
+        <span ng-hide='editing'>{{level.label}}</span>
+        <span ng-show='editing'><input type="text" ng-model="level.label"/></span>
+      </td>
+      <td>
+        <a ng-hide='editing' href="" ng-click="editing = true"><i class="icon-pencil"></i></a>
+        <a ng-show='editing' href="" ng-click="update(); editing = false"><i class="icon-ok"></i></a>
+      </td>
+    </tr>
+    <tr ng-show="adding">
+      <td>
+        <span><input type="text" ng-model="newLevel.label"/></span>
+      </td>
+      <td>
+        <a href="" ng-click="push(newLevel); adding = false"><i class="icon-ok"></i></a>
+      </td>
+    </tr>
+  </tbody>
+</table>

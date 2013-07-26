@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <title>My AngularJS App</title>
+  <link rel="stylesheet" href="css/app.css"/>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+</head>
+<body ng-controller="MainCntl">
+  <div class="container">
+    <div class="header">
+      <h3>AngularJS Demo</h3>
+      <ul class="nav nav-tabs">
+        <li ng-class="{'active': $location.path() == '/customer'}"><a href="#/customer">Kunde</a></li>
+        <li ng-class="{'active': $location.path() == '/property'}"><a href="#/property">Liegenschaft</a></li>
+        <li ng-class="{'active': $location.path() == '/levels'}"><a href="#/levels">Etagen</a></li>
+      </ul>
+    </div>
+    <div class="row-fluid" ng-view></div>
+    <hr/>
+    <div class="muted">
+      <p>Demo app: v<span app-version></span></p>
+    </div>
+  </div>
+
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+  -->
+  <script src="lib/angular/angular.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/services.js"></script>
+  <script src="js/controllers.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/directives.js"></script>
+</body>
+</html>
