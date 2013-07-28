@@ -39,8 +39,8 @@ Wrapper.prototype.delete =
 
 angular
   .module('myApp.services', ['ngResource'])
-  .factory('MeteringConcept', ['$resource', '$rootScope',
-    function($resource, $rootScope) {
+  .factory('MeteringConcept', ['$resource', '$rootScope', 'Customer',
+    function($resource, $rootScope, Customer) {
       var res = $resource('api/metering_concepts/:_id', {});
       var wrapper = new Wrapper(res, $rootScope);
       return {
@@ -56,6 +56,9 @@ angular
           wrapper.save(data, callback);
         },
         delete: function(id, callback) {
+          Customer.findByMeteringConcept(id, function(docs) {
+            angular.forEach(docs, function(doc) { console.log("Deleting ", doc); Customer.delete(doc._id); });
+          });
           wrapper.delete(id, callback);
         }
       }
@@ -69,13 +72,14 @@ angular
         create: function(id) {
           wrapper.save({meteringConceptId: id, createdAt: new Date()});
         },
-        findByMeteringConcept: function(id) {
-          var customer = res.query({meteringConceptId: id});
+        findByMeteringConcept: function(id, callback) {
+          var customer = res.query({meteringConceptId: id}, callback || function() {});
           return customer;
         },
         save: function(customer) {
           wrapper.save(customer);
-        }
+        },
+        delete: function(id) { wrapper.delete(id); }
       }
     }
   ])
