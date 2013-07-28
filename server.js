@@ -63,6 +63,7 @@ app.get('/api/:collection/:id', function(req, res) {
 
 // Save 
 app.post('/api/:collection', function(req, res) {
+    console.log("Saving ", req.body);
     if (req.body._id) { req.body._id = objectId(req.body._id);}
     db.collection(req.params.collection).save(req.body, {safe:true}, fn(req, res));
 });

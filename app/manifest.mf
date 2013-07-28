@@ -1,0 +1,27 @@
+CACHE MANIFEST
+# 2010-06-18:v2
+
+# Explicitly cached 'master entries'.
+CACHE:
+index.html
+
+partials/levels.html
+partials/customer.html
+partials/property.html
+
+js/app.js
+js/controllers.js
+js/services.js
+js/filters.js
+js/directives.js
+
+lib/angular/angular.js
+lib/angular/angular-resource.js
+
+css/app.css
+css/bootstrap.min.css
+
+img/glyphicons-halflings.png
+
+NETWORK:
+*

@@ -31,29 +31,28 @@ var controllers = {
     $scope.reset();
   },
 
-  LevelController: function($scope, Level) {
-    $scope.levels = Level.all();
+  LevelController: function($scope, LevelList) {
+    $scope.levelList = LevelList.get();
 
     $scope.setDefaults = function() {
-      Level.setDefaults();
-      $scope.levels = Level.all();
+      $scope.levelList.levels = LevelList.defaults();
     }
 
     $scope.new = function() {
-      $scope.newLevel = Level.new();
+      $scope.newLevel = {};
     };
 
-    $scope.push = function(level) {
-      $scope.levels.push(level);
-      Level.save($scope.levels);
+    $scope.add = function() {
+      var level = angular.copy($scope.newLevel);
+      $scope.levelList.levels.push(level);
+      $scope.newLevel = {};
     };
 
     $scope.update = function() {
-      Level.save($scope.levels);
     };
 
-    $scope.delete = function(level) {
-
+    $scope.save = function() {
+      LevelList.save($scope.levelList);
     };
   }
 
@@ -63,7 +62,7 @@ angular
   .module('myApp.controllers', [])
   .controller('Customer', ['$scope', controllers.CustomerController])
   .controller('Property', ['$scope', controllers.PropertyController])
-  .controller('Level', ['$scope', 'Level', controllers.LevelController])
+  .controller('Level', ['$scope', 'LevelList', controllers.LevelController])
   ;
 
 
