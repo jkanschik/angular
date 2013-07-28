@@ -1,5 +1,5 @@
 <!doctype html>
-<html manifest="manifest.mf" lang="en" ng-app="myApp">
+<html lang="en" ng-app="myApp">
 <head>
   <meta charset="utf-8">
   <title>My AngularJS App</title>
@@ -9,6 +9,10 @@
 <body ng-controller="MainCntl">
   <div class="container">
     <div class="header">
+      <div class="pull-right" ng-click="toogleOnlineModus()">
+        <span class="label" ng-show="online">Online Modus</span>
+        <span class="label label-warning" ng-show="!online">Offline Modus</span>
+      </div>
       <h3>AngularJS Demo</h3>
       <ul class="nav nav-tabs">
         <li ng-class="{'active': $location.path() == '/customer'}"><a href="#/customer">Kunde</a></li>

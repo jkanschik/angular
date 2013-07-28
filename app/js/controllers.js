@@ -32,7 +32,7 @@ var controllers = {
   },
 
   LevelController: function($scope, LevelList) {
-    $scope.levelList = LevelList.get();
+    $scope.levelList = LevelList.get() || LevelList.new();
 
     $scope.setDefaults = function() {
       $scope.levelList.levels = LevelList.defaults();

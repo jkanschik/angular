@@ -3,9 +3,9 @@ CACHE MANIFEST
 
 # Explicitly cached 'master entries'.
 CACHE:
-index.html
+#index.html
 
-partials/levels.html
+partials/levels.html 
 partials/customer.html
 partials/property.html
 
