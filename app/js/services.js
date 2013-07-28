@@ -32,7 +32,17 @@ angular
   .factory('Customer', ['$resource', '$rootScope',
     function($resource, $rootScope) {
       var res = $resource('api/customers/:_id', {});
-      return new Wrapper(res, $rootScope);
+      var wrapper = new Wrapper(res, $rootScope);
+      return {
+        new: function() { return {_id: 'customer', name:'asdasd'}; },
+        get: function() {
+          var customer = wrapper.get('customer', function(doc) { customer.name = doc.name; });
+          return customer;
+        },
+        save: function(customer) {
+          wrapper.save(customer);
+        }
+      }
     }
   ])
   .factory('RemoteLevel', ['$resource', '$http', '$rootScope',
