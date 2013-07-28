@@ -1,23 +1,28 @@
+<div ng-include src="'partials/navbar.html'"></div>
+
 <form novalidate class="form-horizontal">
   <div class="control-group">
     <label class="control-label" for="customer_number">Kundennummer</label>
     <div class="controls">
-      <input type="text" id="customer_number" placeholder="Kundennummer" ng-model="customer.number">
+      <input type="text" id="customer_number" placeholder="Kundennummer" ng-model="customer[0].number">
     </div>
   </div>
   <div class="control-group">
     <label class="control-label" for="group_number">Konzernnummer</label>
     <div class="controls">
-      <input type="text" id="group_number" placeholder="Konzernnummer" ng-model="customer.group_number">
+      <input type="text" id="group_number" placeholder="Konzernnummer" ng-model="customer[0].group_number">
     </div>
   </div>
   <div class="control-group">
     <label class="control-label" for="name">Name</label>
     <div class="controls">
-      <input type="text" id="name" placeholder="Name" ng-model="customer.name">
+      <input type="text" id="name" placeholder="Name" ng-model="customer[0].name">
     </div>
   </div>
 
   <button ng-click="reset()" class="btn">Reset</button>
-  <button ng-click="save(customer)" class="btn btn-primary">Speichern</button>
+  <button ng-click="save()" class="btn btn-primary">Speichern</button>
 </form>
+
+<hr />
+<pre>form = {{customer | json}}</pre>

@@ -2,7 +2,7 @@
 <html lang="en" ng-app="myApp">
 <head>
   <meta charset="utf-8">
-  <title>My AngularJS App</title>
+  <title>Messkonzept</title>
   <link rel="stylesheet" href="css/app.css"/>
   <link rel="stylesheet" href="css/bootstrap.min.css"/>
 </head>
@@ -13,12 +13,7 @@
         <span class="label" ng-show="online">Online Modus</span>
         <span class="label label-warning" ng-show="!online">Offline Modus</span>
       </div>
-      <h3>AngularJS Demo</h3>
-      <ul class="nav nav-tabs">
-        <li ng-class="{'active': $location.path() == '/customer'}"><a href="#/customer">Kunde</a></li>
-        <li ng-class="{'active': $location.path() == '/property'}"><a href="#/property">Liegenschaft</a></li>
-        <li ng-class="{'active': $location.path() == '/levels'}"><a href="#/levels">Etagen</a></li>
-      </ul>
+      <h3><a href="/">Messkonzept</a></h3>
     </div>
     <div class="row-fluid" ng-view></div>
     <hr/>

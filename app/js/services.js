@@ -18,25 +18,59 @@ Wrapper.prototype.get = function(id, callback) {
       }
     };
 Wrapper.prototype.save = 
-    function(data) {
+    function(data, callback) {
+      data.updatedAt = new Date();
       console.log("Wrapper 'save': storing data in local storage: ", data);
       localStorage.setItem(data['_id'], JSON.stringify(data));
       if (this.rootScope.online) {
         console.log("Wrapper 'save', online API access, data: ", data);
-        this.resource.save(data);
+        this.resource.save(data, callback || function() {});
+      }
+    };
+Wrapper.prototype.delete = 
+    function(id, callback) {
+      console.log("Wrapper 'delete': removing from local storage with id ", id);
+      localStorage.removeItem(id);
+      if (this.rootScope.online) {
+        console.log("Wrapper 'delete', online API access, id: ", id);
+        this.resource.delete({_id: id}, callback || angular.noop);
       }
     };
 
 angular
   .module('myApp.services', ['ngResource'])
+  .factory('MeteringConcept', ['$resource', '$rootScope',
+    function($resource, $rootScope) {
+      var res = $resource('api/metering_concepts/:_id', {});
+      var wrapper = new Wrapper(res, $rootScope);
+      return {
+        new: function() { return {}; },
+        get: function(id) {
+          var meteringConcept = wrapper.get(id, function(doc) { meteringConcept = doc; });
+          return meteringConcept;
+        },
+        all: function() {
+          return $rootScope.online ? res.query({}) : [];
+        },
+        save: function(data, callback) {
+          wrapper.save(data, callback);
+        },
+        delete: function(id, callback) {
+          wrapper.delete(id, callback);
+        }
+      }
+    }
+  ])
   .factory('Customer', ['$resource', '$rootScope',
     function($resource, $rootScope) {
       var res = $resource('api/customers/:_id', {});
       var wrapper = new Wrapper(res, $rootScope);
       return {
-        new: function() { return {_id: 'customer', name:'asdasd'}; },
-        get: function() {
-          var customer = wrapper.get('customer', function(doc) { customer.name = doc.name; });
+        create: function(id) {
+          wrapper.save({meteringConceptId: id, createdAt: new Date()});
+        },
+        findByMeteringConcept: function(id) {
+          var customer = res.query({meteringConceptId: id});
           return customer;
         },
         save: function(customer) {

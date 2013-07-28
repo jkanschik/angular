@@ -3,21 +3,65 @@
 /* Controllers */
 
 var controllers = {
-  CustomerController: function($scope, Customer) {
-    $scope.customer = Customer.new();
+  WelcomeController: function($scope, $location, MeteringConcept, Customer) {
+    $scope.meteringConcepts = MeteringConcept.all();
 
-    $scope.save = function(customer) {
-      Customer.save($scope.customer);
+    $scope.new = function() {
+      MeteringConcept.save({createdAt: new Date(), updatedAt: new Date()}, function(doc) {
+        Customer.create(doc._id);
+        $location.path('/meteringConcepts/' + doc._id);
+      })
+    };
+
+    $scope.details = function(id) {
+      $location.path('/meteringConcepts/' + id);
+    };
+
+    $scope.delete = function(id) {
+      var ix;
+      for (var i in $scope.meteringConcepts) {
+        if ($scope.meteringConcepts[i]._id == id) {
+          ix = i;
+        }
+      }
+      MeteringConcept.delete(id, function() {
+        $scope.meteringConcepts.splice(ix, 1);
+      });
+
+    }
+  },
+
+  MeteringConceptController: function($scope, $routeParams, MeteringConcept) {
+    $scope.meteringConcept = MeteringConcept.get($routeParams._id);
+    $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
+
+    $scope.save = function(meteringConcept) {
+      MeteringConcept.save($scope.meteringConcept);
     };
    
     $scope.reset = function() {
-      $scope.customer = Customer.get();
+      $scope.meteringConcept = MeteringConcept.get($routeParams._id);
+    };
+
+  },
+
+  CustomerController: function($scope, $routeParams, Customer) {
+    $scope.customer = Customer.findByMeteringConcept($routeParams._id);
+    $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
+
+    $scope.save = function() {
+      Customer.save($scope.customer[0]);
+    };
+   
+    $scope.reset = function() {
+      $scope.customer = Customer.findByMeteringConcept($routeParams._id);
     };
    
   },
 
-  PropertyController: function($scope) {
+  PropertyController: function($scope, $routeParams) {
     $scope.master= {};
+    $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
    
     $scope.update = function(customer) {
       $scope.master= angular.copy(customer);
@@ -30,8 +74,9 @@ var controllers = {
     $scope.reset();
   },
 
-  LevelController: function($scope, LevelList) {
+  LevelController: function($scope, $routeParams, LevelList) {
     $scope.levelList = LevelList.new();
+    $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
 
     $scope.setDefaults = function() {
       $scope.levelList.levels = LevelList.defaults();
@@ -56,9 +101,11 @@ var controllers = {
 
 angular
   .module('myApp.controllers', [])
-  .controller('Customer', ['$scope', 'Customer', controllers.CustomerController])
-  .controller('Property', ['$scope', controllers.PropertyController])
-  .controller('Level', ['$scope', 'LevelList', controllers.LevelController])
+  .controller('Welcome', ['$scope', '$location', 'MeteringConcept', 'Customer', controllers.WelcomeController])
+  .controller('MeteringConcept', ['$scope', '$routeParams', 'MeteringConcept', controllers.MeteringConceptController])
+  .controller('Customer', ['$scope', '$routeParams','Customer', controllers.CustomerController])
+  .controller('Property', ['$scope', '$routeParams', controllers.PropertyController])
+  .controller('Level', ['$scope', '$routeParams', 'LevelList', controllers.LevelController])
   ;
 
 
