@@ -8,6 +8,7 @@ var controllers = {
 
     $scope.new = function() {
       MeteringConcept.save({createdAt: new Date(), updatedAt: new Date()}, function(doc) {
+        console.log("Created concept", doc);
         Customer.create(doc._id);
         $location.path('/meteringConcepts/' + doc._id);
       })

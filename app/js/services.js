@@ -12,6 +12,12 @@ var generateUuid = function() {
   return uuid;
 };
 
+var matchParams = function(doc, params) {
+  if (doc['meteringConceptId'] == params['meteringConceptId'])
+    return true;
+  return false;
+};
+
 var Wrapper = function(resource, rootScope) {this.rootScope = rootScope; this.resource = resource};
 Wrapper.prototype.get = function(id, callback) {
   if (this.rootScope.online) {
@@ -27,17 +33,19 @@ Wrapper.prototype.get = function(id, callback) {
     return localData;
   }
 };
-Wrapper.prototype.save = function(data, callback) {
+Wrapper.prototype.save = function(data, success) {
   data.updatedAt = new Date();
   data._id = data._id || generateUuid();
-  callback = callback || function() {};
+  success = success || function() {};
   console.log("Wrapper 'save': storing data in local storage: ", data);
   localStorage.setItem(data['_id'], JSON.stringify(data));
   if (this.rootScope.online) {
     console.log("Wrapper 'save', online API access, data: ", data);
-    this.resource.save(data, callback);
+    this.resource.save(data, function(result) {
+      success(data);
+    });
   } else {
-    callback(data);
+    success(data);
   }
 };
 Wrapper.prototype.delete = function(id, callback) {
@@ -46,6 +54,35 @@ Wrapper.prototype.delete = function(id, callback) {
   if (this.rootScope.online) {
     console.log("Wrapper 'delete', online API access, id: ", id);
     this.resource.delete({_id: id}, callback || angular.noop);
+  }
+};
+Wrapper.prototype.query = function(params, success) {
+  success = success || function() {};
+  if (this.rootScope.online) {
+    console.log("Wrapper.query: online access for query ", params);
+    return this.resource.query(params, function(docs) {
+      console.log("Wrapper.query got documents ", docs);
+      angular.forEach(docs, function(doc) {
+        console.log("Wrapper 'query': local storade saving entity with ", doc._id);
+        localStorage.setItem(doc._id, JSON.stringify(doc));
+      });
+      success(docs);
+    });
+  } else {
+    console.log("Wrapper.query: offline access for query ", params);
+    var docs = [];
+    for (var ix = 0; ix < localStorage.length; ix++) {
+      var key = localStorage.key(ix);
+      var entity = localStorage.getItem(key);
+      entity = JSON.parse(entity);
+      console.log(entity);
+      if (matchParams(entity, params)) {
+        docs.push(entity);
+      }
+    }
+    console.log(docs);
+    window.setTimeout(function() { success(docs); });
+    return docs;
   }
 };
 
@@ -84,10 +121,8 @@ angular
         create: function(id) {
           wrapper.save({meteringConceptId: id, createdAt: new Date()});
         },
-        findByMeteringConcept: function(id, callback) {
-          // TODO query funktioniert nicht offline!
-          var customer = res.query({meteringConceptId: id}, callback || function() {});
-          return customer;
+        findByMeteringConcept: function(id, success) {
+          return wrapper.query({meteringConceptId: id}, success || function() {});
         },
         save: function(customer) {
           wrapper.save(customer);
