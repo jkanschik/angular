@@ -2,40 +2,52 @@
 
 /* Services */
 
+var generateUuid = function() {
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
+    function(c) {
+      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+      return v.toString(16);
+      }
+  );
+  return uuid;
+};
+
 var Wrapper = function(resource, rootScope) {this.rootScope = rootScope; this.resource = resource};
 Wrapper.prototype.get = function(id, callback) {
-      if (this.rootScope.online) {
-        console.log("Wrapper 'get', online API access, id: ", id);
-        return this.resource.get({'_id': id}, function(doc) {
-          localStorage.setItem(id, JSON.stringify(doc));
-          callback(doc);
-        });
-      } else {
-        console.log("Wrapper 'get', offline access to local storage, id: ", id);
-        var localData = localStorage.getItem(id);
-        localData = JSON.parse(localData);
-        return localData;
-      }
-    };
-Wrapper.prototype.save = 
-    function(data, callback) {
-      data.updatedAt = new Date();
-      console.log("Wrapper 'save': storing data in local storage: ", data);
-      localStorage.setItem(data['_id'], JSON.stringify(data));
-      if (this.rootScope.online) {
-        console.log("Wrapper 'save', online API access, data: ", data);
-        this.resource.save(data, callback || function() {});
-      }
-    };
-Wrapper.prototype.delete = 
-    function(id, callback) {
-      console.log("Wrapper 'delete': removing from local storage with id ", id);
-      localStorage.removeItem(id);
-      if (this.rootScope.online) {
-        console.log("Wrapper 'delete', online API access, id: ", id);
-        this.resource.delete({_id: id}, callback || angular.noop);
-      }
-    };
+  if (this.rootScope.online) {
+    console.log("Wrapper 'get', online API access, id: ", id);
+    return this.resource.get({'_id': id}, function(doc) {
+      localStorage.setItem(id, JSON.stringify(doc));
+      callback(doc);
+    });
+  } else {
+    console.log("Wrapper 'get', offline access to local storage, id: ", id);
+    var localData = localStorage.getItem(id);
+    localData = JSON.parse(localData);
+    return localData;
+  }
+};
+Wrapper.prototype.save = function(data, callback) {
+  data.updatedAt = new Date();
+  data._id = data._id || generateUuid();
+  callback = callback || function() {};
+  console.log("Wrapper 'save': storing data in local storage: ", data);
+  localStorage.setItem(data['_id'], JSON.stringify(data));
+  if (this.rootScope.online) {
+    console.log("Wrapper 'save', online API access, data: ", data);
+    this.resource.save(data, callback);
+  } else {
+    callback(data);
+  }
+};
+Wrapper.prototype.delete = function(id, callback) {
+  console.log("Wrapper 'delete': removing from local storage with id ", id);
+  localStorage.removeItem(id);
+  if (this.rootScope.online) {
+    console.log("Wrapper 'delete', online API access, id: ", id);
+    this.resource.delete({_id: id}, callback || angular.noop);
+  }
+};
 
 angular
   .module('myApp.services', ['ngResource'])
@@ -73,6 +85,7 @@ angular
           wrapper.save({meteringConceptId: id, createdAt: new Date()});
         },
         findByMeteringConcept: function(id, callback) {
+          // TODO query funktioniert nicht offline!
           var customer = res.query({meteringConceptId: id}, callback || function() {});
           return customer;
         },
