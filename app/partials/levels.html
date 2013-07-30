@@ -7,7 +7,7 @@
     <tr>
       <th>Bezeichnung</th>
       <th>
-        <a href="" ng-click="new(); adding = true"><i class="icon-plus-sign"></i></a>
+        <a href="" ng-click="new(); adding = true"><i class="glyphicon glyphicon-plus-sign"></i></a>
       </th>
     </tr>
   </thead>
@@ -18,8 +18,9 @@
         <span ng-show='editing'><input type="text" ng-model="level.label"/></span>
       </td>
       <td>
-        <a ng-hide='editing' href="" ng-click="editing = true"><i class="icon-pencil"></i></a>
-        <a ng-show='editing' href="" ng-click="update(); editing = false"><i class="icon-ok"></i></a>
+        <a ng-hide='editing' href="" ng-click="editing = true"><i class="glyphicon glyphicon-pencil"></i></a>
+        <a ng-show='editing' href="" ng-click="update(); editing = false"><i class="glyphicon glyphicon-ok"></i></a>
+        <a ng-hide='editing' href="" ng-click="delete(); editing = true"><i class="glyphicon glyphicon-remove"></i></a>
       </td>
     </tr>
     <tr>
@@ -27,7 +28,7 @@
         <span><input type="text" ng-model="newLevel.label"/></span>
       </td>
       <td>
-        <a href="" ng-click="add()"><i class="icon-plus-sign"></i></a>
+        <a href="" ng-click="add()"><i class="glyphicon glyphicon-plus-sign"></i></a>
       </td>
     </tr>
   </tbody>
