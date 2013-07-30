@@ -75,6 +75,68 @@ var controllers = {
     $scope.reset();
   },
 
+  LocationsController: function($scope, $routeParams) {
+    $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
+
+    $scope.resetLocationIdsByNumber = function() {
+      $scope.locationIdsByNumber = {};
+      angular.forEach($scope.locations, function(location) {
+        $scope.locationIdsByNumber[location.number] = location.id;
+      });
+    }
+
+    /* Validate the parents of the location and set missingParents
+     * to the list of parents which don't refer to an existing location.
+     */
+    $scope.validateParentLocations = function(location) {
+      console.log("Validating parents ", location.parentNumbers, " of location ", location.number);
+
+      location.parents = [];
+      location.missingParents = [];
+
+      angular.forEach(location.parentNumbers, function(value) {
+        var parentId = $scope.locationIdsByNumber[value];
+        console.log("ParentId: ", parentId);
+        if (parentId)
+          location.parents.push(parentId);
+        else
+          location.missingParents.push(value);
+        console.log(location.missingParents);
+      });
+      // the result are the missing parents
+    };
+
+    $scope.resetParentNumbers = function(location) {
+      location.parentNumbers = [];
+      angular.forEach(location.parents, function(parentId) {
+        var parentNumber = $scope.locations[parentId].number;
+        location.parentNumbers.push(parentNumber);
+      });
+    };
+
+    $scope.updateLocationNumber = function(location) {
+      $scope.resetLocationIdsByNumber();
+      angular.forEach($scope.locations, function(value) {
+//        $scope.resetParentNumbers(value);
+        $scope.validateParentLocations(value);
+      });
+    };
+
+$scope.locations = {
+  "id1": {id: "id1", number: "1.00", type: "MEZ", parents: []},
+  "id2": {id: "id2", number: "1.01", type: "MEZ", parents: ["id1"]},
+  "id3": {id: "id3", number: "1.02", type: "MEZ", parents: ["id1", "id2"]}
+};
+
+$scope.resetLocationIdsByNumber();
+angular.forEach($scope.locations, function(location) {
+  $scope.resetParentNumbers(location);
+});
+
+
+  },
+
+
   LevelController: function($scope, $routeParams, LevelList) {
     $scope.levelList = LevelList.new();
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
@@ -101,11 +163,12 @@ var controllers = {
 }
 
 angular
-  .module('myApp.controllers', [])
+  .module('myApp.controllers', ['ui.validate'])
   .controller('Welcome', ['$scope', '$location', 'MeteringConcept', 'Customer', controllers.WelcomeController])
   .controller('MeteringConcept', ['$scope', '$routeParams', 'MeteringConcept', controllers.MeteringConceptController])
   .controller('Customer', ['$scope', '$routeParams','Customer', controllers.CustomerController])
   .controller('Property', ['$scope', '$routeParams', controllers.PropertyController])
+  .controller('Locations', ['$scope', '$routeParams', controllers.LocationsController])
   .controller('Level', ['$scope', '$routeParams', 'LevelList', controllers.LevelController])
   ;
 
