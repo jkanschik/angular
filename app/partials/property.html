@@ -1,27 +1,30 @@
 <div ng-include src="'partials/navbar.html'"></div>
 
 <form novalidate class="form-horizontal">
-  <div class="control-group">
-    <label class="control-label" for="property_number">Liegenschaftsnummer</label>
-    <div class="controls">
-      <input type="text" id="property_number" placeholder="Liegenschaftsnummer" ng-model="property.number">
+  <fieldset>
+    <legend>Liegenschaftsinformationen</legend>
+    <div class="form-group">
+      <label class="col-lg-2 control-label" for="property_number">Liegenschaftsnummer</label>
+      <div class="col-lg-2">
+        <input class="form-control" type="text" id="property_number" placeholder="Liegenschaftsnummer" ng-model="property.number">
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="street">Straße</label>
-    <div class="controls">
-      <input type="text" id="street" placeholder="Straße" ng-model="property.street">
+    <div class="form-group">
+      <label class="col-lg-2 control-label" for="street">Straße und Hausnummer</label>
+      <div class="col-lg-8">
+        <input class="form-control" type="text" id="street" placeholder="Straße" ng-model="property.street">
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="name">Ort</label>
-    <div class="controls">
-      <input type="text" id="ort" placeholder="Ort" ng-model="property.city">
+    <div class="form-group">
+      <label class="col-lg-2 control-label" for="name">Ort</label>
+      <div class="col-lg-8">
+        <input class="form-control" type="text" id="ort" placeholder="Ort" ng-model="property.city">
+      </div>
     </div>
-  </div>
 
-  <button ng-click="save()" class="btn btn-primary">Speichern</button>
-  <button ng-click="reset()" class="btn">Reset</button>
+    <button ng-click="save()" class="btn btn-primary">Speichern</button>
+    <button ng-click="reset()" class="btn">Reset</button>
+  </fieldset>
 </form>
 
 <hr />

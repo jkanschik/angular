@@ -12,20 +12,21 @@
     </thead>
     <tbody>
       <tr ng-repeat="location in locations" name="{{location.number}}">
-        <td>
-          <input  type="text" class="input-mini"
+        <td class="col-lg-1 has-error">
+          <input  type="text" class="form-control input-small"
                   ng-model="location.number" ng-model-onblur />
         </td>
-        <td><input type="text" ng-model="location.type" class="input-mini"/></td>
-        <td>
-          <input  type="text"
-                  ng-model="location.parents" ng-list ng-model-onblur
-                  ng-change="validateParentLocations(location)" />
-          <div style="color: red" ng-show="location.missingParents.length > 0">
-            Missing parents: {{location.missingParents}}
-          </div>
+        <td class="col-lg-1">
+          <input  type="text" ng-model="location.type" class="form-control input-small"/>
         </td>
-        <td><pre style="font-size: 10px; padding:0px; margin:0px;line-height:10px">{{location | json}}</pre></td>
+        <td class="col-lg-8 has-error">
+          <input  type="text" class="form-control input-small"
+                  ng-model="location.parents" ng-model-onblur ng-list
+                  ng-change="validateParentLocations(location)" />
+          <span class="help-block" ng-show="location.missingParents.length > 0">
+            Fehlende Messstellennummern: {{location.missingParents.join(",")}}
+          </span>
+        </td>
       </tr>
     </tbody>
   </table>

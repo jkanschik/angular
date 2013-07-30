@@ -1,27 +1,30 @@
 <div ng-include src="'partials/navbar.html'"></div>
 
 <form novalidate class="form-horizontal">
-  <div class="control-group">
-    <label class="control-label" for="customer_number">Kundennummer</label>
-    <div class="controls">
-      <input type="text" id="customer_number" placeholder="Kundennummer" ng-model="customer[0].number">
+  <fieldset>
+    <legend>Kundeninformationen</legend>
+    <div class="form-group">
+      <label class="col-lg-2 control-label" for="customer_number">Kundennummer</label>
+      <div class="col-lg-8">
+        <input class="form-control" type="text" id="customer_number" placeholder="Kundennummer" ng-model="customer[0].number">
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="group_number">Konzernnummer</label>
-    <div class="controls">
-      <input type="text" id="group_number" placeholder="Konzernnummer" ng-model="customer[0].group_number">
+    <div class="form-group">
+      <label class="col-lg-2 control-label" for="group_number">Konzernnummer</label>
+      <div class="col-lg-8">
+        <input class="form-control" type="text" id="group_number" placeholder="Konzernnummer" ng-model="customer[0].group_number">
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="name">Name</label>
-    <div class="controls">
-      <input type="text" id="name" placeholder="Name" ng-model="customer[0].name">
+    <div class="form-group">
+      <label class="col-lg-2 control-label" for="name">Name</label>
+      <div class="col-lg-8">
+        <input class="form-control" type="text" id="name" placeholder="Name" ng-model="customer[0].name">
+      </div>
     </div>
-  </div>
 
-  <button ng-click="save()" class="btn btn-primary">Speichern</button>
-  <button ng-click="reset()" class="btn">Reset</button>
+    <button ng-click="save()" class="btn btn-primary">Speichern</button>
+    <button ng-click="reset()" class="btn">Reset</button>
+  </fieldset>
 </form>
 
 <hr />

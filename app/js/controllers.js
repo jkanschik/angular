@@ -94,7 +94,7 @@ var controllers = {
 
   Zu 1)
     Validierung starten.
-    location.$errors.missingParents = "Die folgenden Messstellennummern fehlen: " + Liste
+    location.missingParents = "Die folgenden Messstellennummern fehlen: " + Liste
   Zu 2a)
     Validierung neu starten, dadurch wird missingParents neu aufgebaut. Alternativ: neue Nummer aus missing entfernen.
     In der neuen Liste der missingParents fehlt die neue Nummer.

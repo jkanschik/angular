@@ -1,34 +1,37 @@
 <div ng-include src="'partials/navbar.html'"></div>
 
-
 <form novalidate class="form-horizontal">
-  <div class="control-group">
-    <label class="control-label" for="name">Name des Konzepts</label>
-    <div class="controls">
-      <input class="input-xxlarge" type="text" id="name" ng-model="meteringConcept.name">
+  <fieldset>
+    <legend>Allgemeine Daten zum Messkonzept</legend>
+    <div class="form-group">
+      <label class="col-lg-2 control-label" for="name">Name des Konzepts</label>
+      <div class="col-lg-8">
+        <input class="form-control" type="text" id="name" ng-model="meteringConcept.name">
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="description">Beschreibung</label>
-    <div class="controls">
-      <textarea class="input-xxlarge" id="description" class="form-control" rows="3" ng-model="meteringConcept.description"></textarea>
+    <div class="form-group">
+      <label class="col-lg-2 control-label" for="description">Beschreibung</label>
+      <div class="col-lg-8">
+        <textarea class="form-control" id="description" class="form-control" rows="3" ng-model="meteringConcept.description"></textarea>
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="vi">Verantwortlicher Vertriebsingenieur</label>
-    <div class="controls">
-      <input class="input-xxlarge" type="text" id="vi" ng-model="meteringConcept.vi">
+    <div class="form-group">
+      <label class="col-lg-2 control-label" for="vi">Verantwortlicher Vertriebsingenieur</label>
+      <div class="col-lg-8">
+        <input class="form-control" type="text" id="vi" ng-model="meteringConcept.vi">
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="createdAt">Erzeugt am</label>
-    <div class="controls">
-      <input type="text" id="createdAt" ng-model="meteringConcept.createdAt" disabled>
+    <div class="form-group">
+      <label class="col-lg-2 control-label" for="createdAt">Erzeugt am</label>
+      <div class="col-lg-3">
+        <input class="form-control" type="text" id="createdAt" ng-model="meteringConcept.createdAt" disabled />
+      </div>
     </div>
-  </div>
 
-  <button ng-click="save(meteringConcept)" class="btn btn-primary">Speichern</button>
-  <button ng-click="reset()" class="btn">Reset</button>
+    <button ng-click="save(meteringConcept)" class="btn btn-primary">Speichern</button>
+    <button ng-click="reset()" class="btn">Reset</button>
+  </fieldset>
+
 </form>
 
 
