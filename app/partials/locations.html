@@ -7,6 +7,8 @@
       <tr>
         <th>Messstellennummer</th>
         <th>Gerätetyp</th>
+        <th>Artikelnummer</th>
+        <th>Seriennummer</th>
         <th>Vorgänger (Messstellen)</th>
       </tr>
     </thead>
@@ -18,6 +20,12 @@
         </td>
         <td class="col-lg-1">
           <input  type="text" ng-model="location.type" class="form-control input-small"/>
+        </td>
+        <td class="col-lg-1">
+          <input  type="text" ng-model="location.articleNumber" class="form-control input-small"/>
+        </td>
+        <td class="col-lg-1">
+          <input  type="text" ng-model="location.serialNumber" class="form-control input-small"/>
         </td>
         <td class="col-lg-8 has-error">
           <input  type="text" class="form-control input-small"
