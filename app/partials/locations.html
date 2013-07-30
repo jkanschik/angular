@@ -14,12 +14,12 @@
       <tr ng-repeat="location in locations" name="{{location.number}}">
         <td>
           <input  type="text" class="input-mini"
-                  ng-model="location.number" ng-model-onblur ng-change="updateLocationNumber(location)"/>
+                  ng-model="location.number" ng-model-onblur />
         </td>
         <td><input type="text" ng-model="location.type" class="input-mini"/></td>
         <td>
           <input  type="text"
-                  ng-model="location.parentNumbers" ng-list ng-model-onblur
+                  ng-model="location.parents" ng-list ng-model-onblur
                   ng-change="validateParentLocations(location)" />
           <div style="color: red" ng-show="location.missingParents.length > 0">
             Missing parents: {{location.missingParents}}
