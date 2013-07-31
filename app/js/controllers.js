@@ -60,17 +60,13 @@ var controllers = {
     $scope.reset();
   },
 
-  PropertyController: function($scope, $routeParams) {
-    $scope.master= {
-      number: "4711",
-      contactPartners: [
-        {responsibility: "Technische Leitung", name: "W. Müller", telephone: "123-3123", email: "me@dot.com"}
-      ]
-    };
+  PropertyController: function($scope, $routeParams, Property) {
+    $scope.master = Property.findByMeteringConcept($routeParams._id, function(doc) {$scope.reset();});
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
    
     $scope.update = function(property) {
       $scope.master= angular.copy(property);
+      Property.save($scope.master);
     };
    
     $scope.reset = function() {
@@ -253,8 +249,8 @@ angular
   .module('myApp.controllers', [])
   .controller('Welcome', ['$scope', '$location', 'MeteringConcept', 'Customer', controllers.WelcomeController])
   .controller('MeteringConcept', ['$scope', '$routeParams', 'MeteringConcept', controllers.MeteringConceptController])
-  .controller('Customer', ['$scope', '$routeParams','Customer', controllers.CustomerController])
-  .controller('Property', ['$scope', '$routeParams', controllers.PropertyController])
+  .controller('Customer', ['$scope', '$routeParams', 'Customer', controllers.CustomerController])
+  .controller('Property', ['$scope', '$routeParams', 'Property', controllers.PropertyController])
   .controller('Locations', ['$scope', '$routeParams', controllers.LocationsController])
   .controller('Level', ['$scope', '$routeParams', 'LevelList', controllers.LevelController])
   ;
