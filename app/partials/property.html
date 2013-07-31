@@ -16,16 +16,67 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="col-lg-2 control-label" for="name">Ort</label>
+      <label class="col-lg-2 control-label" for="city">Ort</label>
       <div class="col-lg-8">
-        <input class="form-control" type="text" id="ort" placeholder="Ort" ng-model="property.city">
+        <input class="form-control" type="text" id="city" placeholder="Ort inkl. Postleitzahl" ng-model="property.city">
       </div>
     </div>
-
-    <button ng-click="save()" class="btn btn-primary">Speichern</button>
-    <button ng-click="reset()" class="btn">Reset</button>
+    <div class="form-group">
+      <label class="col-lg-2 control-label" for="hints">Sonderhinweise</label>
+      <div class="col-lg-8">
+        <textarea class="form-control" id="hints" placeholder="Sonderhinweise (Leiter mitnehmen u.ä.)" rows="5" ng-model="property.hints" ></textarea>
+      </div>
+    </div>
   </fieldset>
+
+  <fieldset>
+    <legend>Ansprechpartner</legend>
+    <table class="table table-striped table-condensed">
+      <thead>
+        <tr>
+          <th>
+            <a href="" tabIndex="-1" ng-click="createContactPartner()">
+              <i class="glyphicon glyphicon-plus-sign"></i>
+            </a>
+          </th>
+          <th>Aufgabenbereich</th>
+          <th>Name</th>
+          <th>Telefon</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="partner in property.contactPartners">
+          <td>
+            <a href="" tabIndex="-1" ng-click="deleteContactPartner($index)">
+              <i class="glyphicon glyphicon-remove"></i>
+            </a>
+          </td>
+          <td>
+            <input  type="text" ng-model="partner.responsibility" class="form-control input-small"/>
+          </td>
+          <td>
+            <input  type="text" ng-model="partner.name" class="form-control input-small"/>
+          </td>
+          <td>
+            <input  type="text" ng-model="partner.telephone" class="form-control input-small"/>
+          </td>
+          <td>
+            <input  type="email" class="form-control input-small"
+                    ng-model="partner.email"
+                    ng-keydown="$last && createContactPartnerWithTab($event, partner)"/>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </fieldset>
+
+
+  <button ng-click="update(property)" class="btn btn-primary" type="submit">Speichern</button>
+  <button ng-click="reset()" class="btn">Reset</button>
+
 </form>
 
 <hr />
 <pre>form = {{property | json}}</pre>
+<pre>master = {{master | json}}</pre>

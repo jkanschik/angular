@@ -61,15 +61,33 @@ var controllers = {
   },
 
   PropertyController: function($scope, $routeParams) {
-    $scope.master= {};
+    $scope.master= {
+      number: "4711",
+      contactPartners: [
+        {responsibility: "Technische Leitung", name: "W. Müller", telephone: "123-3123", email: "me@dot.com"}
+      ]
+    };
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
    
-    $scope.update = function(customer) {
-      $scope.master= angular.copy(customer);
+    $scope.update = function(property) {
+      $scope.master= angular.copy(property);
     };
    
     $scope.reset = function() {
-      $scope.customer = angular.copy($scope.master);
+      $scope.property = angular.copy($scope.master);
+    };
+
+    $scope.deleteContactPartner = function(index) {
+      $scope.property.contactPartners.splice(index, 1);
+    };
+
+    $scope.createContactPartner = function() {
+      $scope.property.contactPartners.push({});
+    };
+   
+    $scope.createContactPartnerWithTab = function($event, partner) {
+      if ($event.keyCode == 9 && !$event.shiftKey && !angular.equals(partner, {}))
+        $scope.createContactPartner();
     };
    
     $scope.reset();
