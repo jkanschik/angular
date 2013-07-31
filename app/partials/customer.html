@@ -6,7 +6,7 @@
     <div class="form-group">
       <label class="col-lg-2 control-label" for="customer_number">Kundennummer</label>
       <div class="col-lg-8">
-        <input class="form-control" type="text" id="customer_number" placeholder="Kundennummer" ng-model="customer[0].number">
+        <input class="form-control" type="text" id="customer_number" placeholder="Kundennummer" ng-model="customer[0].number" required>
       </div>
     </div>
     <div class="form-group">
@@ -16,13 +16,31 @@
       </div>
     </div>
     <div class="form-group">
+      <label class="col-lg-2 control-label" for="anrede">Anrede</label>
+      <div class="col-lg-8">
+        <input class="form-control" type="text" id="anrede" placeholder="Anrede" ng-model="customer[0].anrede">
+      </div>
+    </div>
+    <div class="form-group">
       <label class="col-lg-2 control-label" for="name">Name</label>
       <div class="col-lg-8">
         <input class="form-control" type="text" id="name" placeholder="Name" ng-model="customer[0].name">
       </div>
     </div>
+    <div class="form-group">
+      <label class="col-lg-2 control-label" for="street">Straße und Hausnummer</label>
+      <div class="col-lg-8">
+        <input class="form-control" type="text" id="street" placeholder="Straße" ng-model="customer[0].street">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-lg-2 control-label" for="name">Ort</label>
+      <div class="col-lg-8">
+        <input class="form-control" type="text" id="ort" placeholder="Ort" ng-model="customer[0].city">
+      </div>
+    </div>
 
-    <button ng-click="save()" class="btn btn-primary">Speichern</button>
+    <button ng-click="save()" class="btn btn-primary" type="submit">Speichern</button>
     <button ng-click="reset()" class="btn">Reset</button>
   </fieldset>
 </form>
