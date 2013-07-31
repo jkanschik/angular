@@ -7,11 +7,7 @@ var controllers = {
     $scope.meteringConcepts = MeteringConcept.all();
 
     $scope.new = function() {
-      MeteringConcept.save({createdAt: new Date(), updatedAt: new Date()}, function(doc) {
-        console.log("Created concept", doc);
-        Customer.create(doc._id);
-        $location.path('/meteringConcepts/' + doc._id);
-      })
+      MeteringConcept.create(function(doc) {$location.path('/meteringConcepts/' + doc._id)});
     };
 
     $scope.details = function(id) {
@@ -47,17 +43,19 @@ var controllers = {
   },
 
   CustomerController: function($scope, $routeParams, Customer) {
-    $scope.customer = Customer.findByMeteringConcept($routeParams._id);
+    $scope.master = Customer.findByMeteringConcept($routeParams._id, function(doc) {$scope.reset();});
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
 
-    $scope.save = function() {
-      Customer.save($scope.customer[0]);
+    $scope.update = function(customer) {
+      $scope.master = angular.copy($scope.customer);
+      Customer.save($scope.master);
     };
-   
+
     $scope.reset = function() {
-      $scope.customer = Customer.findByMeteringConcept($routeParams._id);
+      $scope.customer = angular.copy($scope.master);
     };
-   
+    
+    $scope.reset();
   },
 
   PropertyController: function($scope, $routeParams) {

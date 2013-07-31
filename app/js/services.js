@@ -24,7 +24,7 @@ Wrapper.prototype.get = function(id, callback) {
     console.log("Wrapper 'get', online API access, id: ", id);
     return this.resource.get({'_id': id}, function(doc) {
       localStorage.setItem(id, JSON.stringify(doc));
-      callback(doc);
+      (callback || angular.noop)(doc);
     });
   } else {
     console.log("Wrapper 'get', offline access to local storage, id: ", id);
@@ -101,6 +101,13 @@ angular
         all: function() {
           return $rootScope.online ? res.query({}) : [];
         },
+        create: function(success) {
+          this.save({createdAt: new Date(), updatedAt: new Date()}, function(doc) {
+            console.log("Created concept", doc);
+            Customer.create(doc._id);
+            (success || angular.noop)(doc);
+          });
+        },
         save: function(data, callback) {
           wrapper.save(data, callback);
         },
@@ -119,10 +126,10 @@ angular
       var wrapper = new Wrapper(res, $rootScope);
       return {
         create: function(id) {
-          wrapper.save({meteringConceptId: id, createdAt: new Date()});
+          wrapper.save({_id: id + "_customer", meteringConceptId: id, createdAt: new Date()});
         },
         findByMeteringConcept: function(id, success) {
-          return wrapper.query({meteringConceptId: id}, success || function() {});
+          return wrapper.get(id + "_customer", success);
         },
         save: function(customer) {
           wrapper.save(customer);
