@@ -94,8 +94,8 @@ angular
       var wrapper = new Wrapper(res, $rootScope);
       return {
         new: function() { return {}; },
-        get: function(id) {
-          var meteringConcept = wrapper.get(id, function(doc) { meteringConcept = doc; });
+        get: function(id, success) {
+          var meteringConcept = wrapper.get(id, function(doc) { meteringConcept = doc; success(doc);});
           return meteringConcept;
         },
         all: function() {

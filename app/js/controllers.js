@@ -29,17 +29,19 @@ var controllers = {
   },
 
   MeteringConceptController: function($scope, $routeParams, MeteringConcept) {
-    $scope.meteringConcept = MeteringConcept.get($routeParams._id);
+    $scope.master = MeteringConcept.get($routeParams._id, function(doc) {$scope.reset();});
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
 
     $scope.save = function(meteringConcept) {
-      MeteringConcept.save($scope.meteringConcept);
+      $scope.master = angular.copy($scope.meteringConcept);
+      MeteringConcept.save($scope.master);
     };
    
     $scope.reset = function() {
-      $scope.meteringConcept = MeteringConcept.get($routeParams._id);
+      $scope.meteringConcept = angular.copy($scope.master);
     };
 
+    $scope.reset();
   },
 
   CustomerController: function($scope, $routeParams, Customer) {
