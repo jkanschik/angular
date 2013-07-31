@@ -108,10 +108,37 @@ var controllers = {
     Eine Neuvalidierung ist nicht nötig, da sich missingNumbers nicht ändert.
   Zu 3)
     Existenz der neuen Nummer prüfen + Validierungsmeldung.
-    location.$errors.number = "Die Messstellennummer ist bereits vergeben!"
+    location.$errors.number.uniqueness = "Die Messstellennummer ist bereits vergeben!"
+    Validierung aller Parents durchführen
   */
   LocationsController: function($scope, $routeParams) {
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
+
+
+    $scope.validateNumber = function(location, index) {
+      var errors = {};
+      var validates = true;
+      // check uniqueness
+      angular.forEach($scope.locations, function(value, key) {
+        if (index != key && location.number == value.number)
+          errors.uniqueness = "Die Messstellennummer " + location.number + " ist bereits vergeben!"
+      });
+      // check existence
+      if (!location.number)
+        errors.existence = "Die Messstellennummer ist ein Pflichtfeld."
+      // format
+      var pattern = /^[1-5]\.[0-9]*$/;
+      if (!pattern.test(location.number))
+        errors.format = "Das Format der Messstellennummer ist [1-5].[0-9]*.";
+
+      if (angular.equals(errors, {})) {
+        delete location.$errors.number;
+        return true;
+      } else {
+        location.$errors.number = errors;
+        return false;
+      }
+    };
 
     /* Validate the parents of the location and set missingParents
      * to the list of parents which don't refer to an existing location.
@@ -129,10 +156,22 @@ var controllers = {
       });
     };
 
-    $scope.watchLocationNumber = function(location) {
-      $scope.$watch('locations.' + location.id + '.number', function(newValue, oldValue) {
+    $scope.validateAllParentLocations = function() {
+      angular.forEach($scope.locations, function(location, index) {
+        $scope.validateParentLocations(location);
+      });
+    }
+
+    $scope.watchLocationNumber = function(location, index) {
+      $scope.$watch('locations.' + index + '.number', function(newValue, oldValue) {
+        // skip, if nothing has changed
         if (oldValue == newValue)
           return;
+        // skip, if it doesn't validate
+        if (!$scope.validateNumber(location, index)) {
+          $scope.validateAllParentLocations();
+          return;
+        }
         console.log("Location number has been changed from ", oldValue, " to ", newValue);
         angular.forEach($scope.locations, function(value) {
           // Fall 2a)
@@ -151,15 +190,15 @@ var controllers = {
       });
     };
 
-$scope.locations = {
-  "id1": {id: "id1", number: "1.00", type: "MEZ", parents: []},
-  "id2": {id: "id2", number: "1.01", type: "MEZ", parents: ["1.00"]},
-  "id3": {id: "id3", number: "1.02", type: "MEZ", parents: ["1.01", "1.02"]}
-};
+$scope.locations = [
+  {id: "id1", number: "1.00", type: "MEZ", parents: [], $errors: {}},
+  {id: "id2", number: "1.01", type: "MEZ", parents: ["1.00"], $errors: {}},
+  {id: "id3", number: "1.02", type: "MEZ", parents: ["1.01", "1.02"], $errors: {}}
+];
 
-angular.forEach($scope.locations, function(location) {
+angular.forEach($scope.locations, function(location, index) {
   $scope.validateParentLocations(location);
-  $scope.watchLocationNumber(location);
+  $scope.watchLocationNumber(location, index);
 });
 
 
