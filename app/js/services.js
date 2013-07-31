@@ -113,9 +113,8 @@ angular
           wrapper.save(data, callback);
         },
         delete: function(id, callback) {
-          Customer.findByMeteringConcept(id, function(docs) {
-            angular.forEach(docs, function(doc) { console.log("Deleting ", doc); Customer.delete(doc._id); });
-          });
+          Customer.findByMeteringConcept(id, function(doc) { Customer.delete(doc._id); });
+          Property.findByMeteringConcept(id, function(doc) { Property.delete(doc._id); });
           wrapper.delete(id, callback);
         }
       }

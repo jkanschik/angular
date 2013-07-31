@@ -14,15 +14,10 @@ var controllers = {
       $location.path('/meteringConcepts/' + id);
     };
 
-    $scope.delete = function(id) {
-      var ix;
-      for (var i in $scope.meteringConcepts) {
-        if ($scope.meteringConcepts[i]._id == id) {
-          ix = i;
-        }
-      }
-      MeteringConcept.delete(id, function() {
-        $scope.meteringConcepts.splice(ix, 1);
+    $scope.delete = function(index) {
+      var concept = $scope.meteringConcepts[index];
+      MeteringConcept.delete(concept._id, function() {
+        $scope.meteringConcepts.splice(index, 1);
       });
 
     }
