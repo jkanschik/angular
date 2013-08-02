@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <title>Messkonzept</title>
-  <link rel="stylesheet" href="css/app.css"/>
   <link rel="stylesheet" href="css/bootstrap.min.css"/>
   <link rel="stylesheet" href="css/bootstrap-glyphicons.css"/>
+  <link rel="stylesheet" href="css/app.css"/>
 </head>
 <body ng-controller="MainCntl">
   <div class="container">
@@ -14,7 +14,7 @@
         <span class="label" ng-show="online">Online Modus</span>
         <span class="label label-warning" ng-show="!online">Offline Modus</span>
       </div>
-      <h3><a href="/">Messkonzept</a></h3>
+      <h3><a href="/" tabIndex="-1">Messkonzept</a></h3>
     </div>
     <div class="row-fluid" ng-view></div>
     <hr/>

@@ -1,49 +1,55 @@
 <div ng-include src="'partials/navbar.html'"></div>
 
-<form novalidate class="form-horizontal">
+<form novalidate class="form-horizontal" name="customerForm">
   <fieldset>
     <legend>Kundeninformationen</legend>
     <div class="form-group">
-      <label class="col-lg-2 control-label" for="customer_number">Kundennummer</label>
+      <label class="col-lg-2 control-label" for="customer_number" name="customer_number_label">Kundennummer</label>
       <div class="col-lg-8">
-        <input class="form-control" type="text" id="customer_number" placeholder="Kundennummer" ng-model="customer.number" required>
+        <input class="form-control" type="text" id="customer_number" placeholder="Kundennummer" tabIndex="100" ng-model="customer.number" required>
       </div>
     </div>
     <div class="form-group">
       <label class="col-lg-2 control-label" for="group_number">Konzernnummer</label>
       <div class="col-lg-8">
-        <input class="form-control" type="text" id="group_number" placeholder="Konzernnummer" ng-model="customer.group_number">
+        <input class="form-control" type="text" id="group_number" placeholder="Konzernnummer" tabIndex="100" ng-model="customer.group_number">
       </div>
     </div>
     <div class="form-group">
       <label class="col-lg-2 control-label" for="anrede">Anrede</label>
       <div class="col-lg-8">
-        <input class="form-control" type="text" id="anrede" placeholder="Anrede" ng-model="customer.anrede">
+        <input class="form-control" type="text" id="anrede" placeholder="Anrede" tabIndex="100" ng-model="customer.anrede">
       </div>
     </div>
     <div class="form-group">
       <label class="col-lg-2 control-label" for="name">Name</label>
       <div class="col-lg-8">
-        <input class="form-control" type="text" id="name" placeholder="Name" ng-model="customer.name">
+        <input class="form-control" type="text" id="name" placeholder="Name" tabIndex="100" ng-model="customer.name">
       </div>
     </div>
     <div class="form-group">
       <label class="col-lg-2 control-label" for="street">Straße und Hausnummer</label>
       <div class="col-lg-8">
-        <input class="form-control" type="text" id="street" placeholder="Straße" ng-model="customer.street">
+        <input class="form-control" type="text" id="street" placeholder="Straße" tabIndex="100" ng-model="customer.street">
       </div>
     </div>
     <div class="form-group">
       <label class="col-lg-2 control-label" for="name">Ort</label>
       <div class="col-lg-8">
-        <input class="form-control" type="text" id="ort" placeholder="Ort" ng-model="customer.city">
+        <input class="form-control" type="text" id="ort" placeholder="Ort" tabIndex="100" ng-model="customer.city">
       </div>
     </div>
 
-    <button ng-click="update(customer)" class="btn btn-primary" type="submit">Speichern</button>
-    <button ng-click="reset()" class="btn">Reset</button>
+    <button ng-click="update(customer)" class="btn btn-primary" type="submit" tabIndex="100">Speichern</button>
+    <button ng-click="reset()" class="btn" tabIndex="100">Reset</button>
   </fieldset>
 </form>
+
+<script type="text/javascript" language="JavaScript">
+alert("qwe");
+  document.customerForm.customer_number_label.focus();
+  document.forms['customerForm'].elements['customer_number_label'].focus();
+</script>
 
 <hr />
 <pre>form = {{customer | json}}</pre>

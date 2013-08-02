@@ -6,25 +6,25 @@
     <div class="form-group">
       <label class="col-lg-2 control-label" for="property_number">Liegenschaftsnummer</label>
       <div class="col-lg-2">
-        <input class="form-control" type="text" id="property_number" placeholder="Liegenschaftsnummer" ng-model="property.number">
+        <input class="form-control" type="text" id="property_number" placeholder="Liegenschaftsnummer" tabIndex="100" ng-model="property.number">
       </div>
     </div>
     <div class="form-group">
       <label class="col-lg-2 control-label" for="street">Straße und Hausnummer</label>
       <div class="col-lg-8">
-        <input class="form-control" type="text" id="street" placeholder="Straße" ng-model="property.street">
+        <input class="form-control" type="text" id="street" placeholder="Straße" tabIndex="100" ng-model="property.street">
       </div>
     </div>
     <div class="form-group">
       <label class="col-lg-2 control-label" for="city">Ort</label>
       <div class="col-lg-8">
-        <input class="form-control" type="text" id="city" placeholder="Ort inkl. Postleitzahl" ng-model="property.city">
+        <input class="form-control" type="text" id="city" placeholder="Ort inkl. Postleitzahl" tabIndex="100" ng-model="property.city">
       </div>
     </div>
     <div class="form-group">
       <label class="col-lg-2 control-label" for="hints">Sonderhinweise</label>
       <div class="col-lg-8">
-        <textarea class="form-control" id="hints" placeholder="Sonderhinweise (Leiter mitnehmen u.ä.)" rows="5" ng-model="property.hints" ></textarea>
+        <textarea class="form-control" id="hints" placeholder="Sonderhinweise (Leiter mitnehmen u.ä.)" rows="5" tabIndex="100" ng-model="property.hints" ></textarea>
       </div>
     </div>
   </fieldset>
@@ -53,18 +53,18 @@
             </a>
           </td>
           <td>
-            <input  type="text" ng-model="partner.responsibility" class="form-control input-small"/>
+            <input  type="text" ng-model="partner.responsibility" class="form-control input-small" tabIndex="100"/>
           </td>
           <td>
-            <input  type="text" ng-model="partner.name" class="form-control input-small"/>
+            <input  type="text" ng-model="partner.name" class="form-control input-small" tabIndex="100"/>
           </td>
           <td>
-            <input  type="text" ng-model="partner.telephone" class="form-control input-small"/>
+            <input  type="text" ng-model="partner.telephone" class="form-control input-small" tabIndex="100"/>
           </td>
           <td>
             <input  type="email" class="form-control input-small"
                     ng-model="partner.email"
-                    ng-keydown="$last && createContactPartnerWithTab($event, partner)"/>
+                    ng-keydown="$last && createContactPartnerWithTab($event, partner)" tabIndex="100"/>
           </td>
         </tr>
       </tbody>
@@ -72,8 +72,8 @@
   </fieldset>
 
 
-  <button ng-click="update(property)" class="btn btn-primary" type="submit">Speichern</button>
-  <button ng-click="reset()" class="btn">Reset</button>
+  <button ng-click="update(property)" class="btn btn-primary" type="submit" tabIndex="100">Speichern</button>
+  <button ng-click="reset()" class="btn" tabIndex="100">Reset</button>
 
 </form>
 

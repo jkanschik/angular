@@ -1,49 +1,53 @@
 <div ng-include src="'partials/navbar.html'"></div>
 
 <form name="form" novalidate>
+  <fieldset>
+    <legend>Messstellen</legend>
 
-  <table class="table table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Messstellennummer</th>
-        <th>Gerätetyp</th>
-        <th>Artikelnummer</th>
-        <th>Seriennummer</th>
-        <th>Vorgänger (Messstellen)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="location in locations" name="{{location.id}}">
-        <td ng-class="(location.$errors.number && 'has-error' || '')">
-          <input  type="text" class="form-control input-small" required
-                  ng-model="location.number" ng-model-onblur />
-          <span class="help-block" ng-show="location.$errors.number">
-            <div ng-repeat="error in location.$errors.number">{{error}}</div>
-          </span>
-        </td>
-        <td class="col-lg-1">
-          <input  type="text" ng-model="location.type" class="form-control input-small"/>
-        </td>
-        <td class="col-lg-1">
-          <input  type="text" ng-model="location.articleNumber" class="form-control input-small"/>
-        </td>
-        <td class="col-lg-1">
-          <input  type="text" ng-model="location.serialNumber" class="form-control input-small"/>
-        </td>
-        <td class="col-lg-8" ng-class="((location.missingParents.length > 0) && 'has-error' || '')">
-          <input  type="text" class="form-control input-small"
-                  ng-model="location.parents" ng-model-onblur ng-list
-                  ng-change="validateParentLocations(location)" />
-          <span class="help-block" ng-show="location.missingParents.length > 0">
-            Fehlende Messstellennummern: {{location.missingParents.join(",")}}
-          </span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <table class="table table-striped table-condensed">
+      <thead>
+        <tr>
+          <th>Messstellennummer</th>
+          <th>Gerätetyp</th>
+          <th>Artikelnummer</th>
+          <th>Seriennummer</th>
+          <th>Vorgänger (Messstellen)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="location in locations" name="{{location.id}}">
+          <td ng-class="(location.$errors.number && 'has-error' || '')">
+            <input  type="text" class="form-control input-small" required
+                    ng-model="location.number" ng-model-onblur />
+            <span class="help-block" ng-show="location.$errors.number">
+              <div ng-repeat="error in location.$errors.number">{{error}}</div>
+            </span>
+          </td>
+          <td class="col-lg-1">
+            <input  type="text" ng-model="location.type" class="form-control input-small"/>
+          </td>
+          <td class="col-lg-1">
+            <input  type="text" ng-model="location.articleNumber" class="form-control input-small"/>
+          </td>
+          <td class="col-lg-1">
+            <input  type="text" ng-model="location.serialNumber" class="form-control input-small"/>
+          </td>
+          <td class="col-lg-8" ng-class="((location.missingParents.length > 0) && 'has-error' || '')">
+            <input  type="text" class="form-control input-small"
+                    ng-model="location.parents" ng-model-onblur ng-list
+                    ng-change="validateParentLocations(location)" />
+            <span class="help-block" ng-show="location.missingParents.length > 0">
+              Fehlende Messstellennummern: {{location.missingParents.join(",")}}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-  <button ng-click="save()" class="btn btn-primary">Speichern</button>
-  <button ng-click="reset()" class="btn">Reset</button>
+    <button ng-click="save()" class="btn btn-primary">Speichern</button>
+    <button ng-click="reset()" class="btn">Reset</button>
+  </fieldset>
+
 </form>
 
 <hr />

@@ -37,14 +37,16 @@ Wrapper.prototype.save = function(data, success) {
   data.updatedAt = new Date();
   data._id = data._id || generateUuid();
   success = success || function() {};
-  console.log("Wrapper 'save': storing data in local storage: ", data);
-  localStorage.setItem(data['_id'], JSON.stringify(data));
   if (this.rootScope.online) {
-    console.log("Wrapper 'save', online API access, data: ", data);
+    console.log("Wrapper 'save', offline storage and online API access, data: ", data);
+    localStorage.setItem(data['_id'], JSON.stringify(data));
     this.resource.save(data, function(result) {
       success(data);
     });
   } else {
+    console.log("Wrapper 'save': storing dirty data in local storage: ", data);
+    data["notSynchronized"] = true;
+    localStorage.setItem(data['_id'], JSON.stringify(data));
     success(data);
   }
 };
@@ -88,8 +90,8 @@ Wrapper.prototype.query = function(params, success) {
 
 angular
   .module('myApp.services', ['ngResource'])
-  .factory('MeteringConcept', ['$resource', '$rootScope', 'Customer', 'Property',
-    function($resource, $rootScope, Customer, Property) {
+  .factory('MeteringConcept', ['$resource', '$rootScope', 'Customer', 'Property', 'LevelList',
+    function($resource, $rootScope, Customer, Property, LevelList) {
       var res = $resource('api/metering_concepts/:_id', {});
       var wrapper = new Wrapper(res, $rootScope);
       return {
@@ -106,6 +108,7 @@ angular
             console.log("Created concept", doc);
             Customer.create(doc._id);
             Property.create(doc._id);
+            LevelList.create(doc._id);
             (success || angular.noop)(doc);
           });
         },
@@ -161,34 +164,11 @@ angular
       }
     }
   ])
-  .factory('RemoteLevel', ['$resource', '$http', '$rootScope',
-    function($resource, $http, $rootScope) {
-      var actions = {
-        'count': {method:'PUT', params:{_id: 'count'}},                           
-        'distinct': {method:'PUT', params:{_id: 'distinct'}},
-        'find': {method:'PUT', params:{_id: 'find'}, isArray:true},              
-        'group': {method:'PUT', params:{_id: 'group'}, isArray:true},            
-        'mapReduce': {method:'PUT', params:{_id: 'mapReduce'}, isArray:true} ,  
-        'aggregate': {method:'PUT', params:{_id: 'aggregate'}, isArray:true}   
-      }
-      var res = $resource('api/levels/:_id', {}, actions);
-      return new Wrapper(res, $rootScope);
-    }
-  ])
-  .factory('LevelList', ['RemoteLevel',
-    function(RemoteLevel) {
-
+  .factory('LevelList', ['$resource', '$rootScope',
+    function($resource, $rootScope) {
+      var res = $resource('api/levelLists/:_id', {});
+      var wrapper = new Wrapper(res, $rootScope);
       return {
-        new: function() {
-          return {_id: "levels", levels: []};
-        },
-        get: function() {
-          var levelList = RemoteLevel.get('levels', function(doc) { levelList.levels = doc.levels; });
-          return levelList;
-        },
-        save: function(levelList) {
-          RemoteLevel.save(levelList);
-        },
         defaults: function() {
           return [
             {id: 'level1', label: '1UG'},
@@ -196,7 +176,22 @@ angular
             {id: 'level3', label: '1OG'},
             {id: 'level4', label: '2OG'}
           ];
-        }
+        },
+        create: function(id) {
+          wrapper.save({
+            _id: id + "_levelList",
+            meteringConceptId: id,
+            createdAt: new Date(),
+            levels: this.defaults()
+          });
+        },
+        findByMeteringConcept: function(id, success) {
+          return wrapper.get(id + "_levelList", success);
+        },
+        save: function(levelList) {
+          wrapper.save(levelList);
+        },
+        delete: function(id) { wrapper.delete(id); }
       }
     }
   ])

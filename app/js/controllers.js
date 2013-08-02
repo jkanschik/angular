@@ -216,12 +216,27 @@ angular.forEach($scope.locations, function(location, index) {
 
 
   LevelController: function($scope, $routeParams, LevelList) {
-    $scope.levelList = LevelList.new();
+    $scope.master = LevelList.findByMeteringConcept($routeParams._id, function(doc) {$scope.reset();});
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
 
+    $scope.update = function(levelList) {
+      $scope.master = angular.copy($scope.levelList);
+      LevelList.save($scope.master);
+    };
+
+    $scope.delete = function(index) {
+      $scope.levelList.levels.splice(index, 1);
+    };
+
+    $scope.reset = function() {
+      $scope.levelList = angular.copy($scope.master);
+    };
+    
     $scope.setDefaults = function() {
       $scope.levelList.levels = LevelList.defaults();
     }
+
+    $scope.reset();
 
     $scope.new = function() {
       $scope.newLevel = {};

@@ -1,38 +1,55 @@
 <div ng-include src="'partials/navbar.html'"></div>
 
-<input type="text" ng-model="search" class="search-query" placeholder="Search">
 
-<table class="table table-striped table-condensed">
-  <thead>
-    <tr>
-      <th>Bezeichnung</th>
-      <th>
-        <a href="" ng-click="new(); adding = true"><i class="glyphicon glyphicon-plus-sign"></i></a>
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="level in levelList.levels | filter: search">
-      <td>
-        <span ng-hide='editing'>{{level.label}}</span>
-        <span ng-show='editing'><input type="text" ng-model="level.label"/></span>
-      </td>
-      <td>
-        <a ng-hide='editing' href="" ng-click="editing = true"><i class="glyphicon glyphicon-pencil"></i></a>
-        <a ng-show='editing' href="" ng-click="update(); editing = false"><i class="glyphicon glyphicon-ok"></i></a>
-        <a ng-hide='editing' href="" ng-click="delete(); editing = true"><i class="glyphicon glyphicon-remove"></i></a>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <span><input type="text" ng-model="newLevel.label"/></span>
-      </td>
-      <td>
-        <a href="" ng-click="add()"><i class="glyphicon glyphicon-plus-sign"></i></a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<form name="form">
+  <fieldset>
 
-<a href="" ng-click="setDefaults()" class="btn">Standardliste laden</a>
-<a href="" ng-click="save()" class="btn btn-primary">Speichern</a>
+    <legend>Etagenliste</legend>
+
+    <div class="well">
+      Die hier aufgeführten Etagen können in dem Messkonzept genutzt werden. In der generierten Grafik werden die Etagen von rechts nach links sortiert.
+    </div>
+
+    <div class="form-inline pull-right col-lg-2">
+      <input type="text" id="search" ng-model="search" class="form-control search-query" placeholder="Search">
+    </div>
+
+    <table class="table table-striped table-condensed">
+      <thead>
+        <tr>
+          <th width="1em">
+            <a href="" tabIndex="-1" ng-click="new(); adding = true"><i class="glyphicon glyphicon-plus-sign"></i></a>
+          </th>
+          <th>Bezeichnung</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="level in levelList.levels | filter: search"  ng-form="levelForm">
+          <td>
+            <a href="" tabIndex="-1" ng-click="delete($index)">
+              <i class="glyphicon glyphicon-remove"></i>
+            </a>
+          </td>
+          <td ng-class="levelForm.label.$valid ? '' : 'has-error'">
+            <input type="text" name="label" class="form-control input-small" ng-model="level.label" required />
+            <span class="help-block" ng-show="levelForm.label.$error.required">Die Bezeichnung ist ein Pflichtfeld!</span>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="" ng-click="add()"><i class="glyphicon glyphicon-plus-sign"></i></a>
+          </td>
+          <td>
+            <span><input type="text" name="newLevel" ng-model="newLevel.label"/></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button ng-click="update()" class="btn btn-primary" type="submit">Speichern</button>
+    <button ng-click="reset()" class="btn">Reset</button>
+    <button ng-click="setDefaults()" class="btn">Standardliste laden</button>
+
+  </fieldset>
+
+</form>
