@@ -90,8 +90,8 @@ Wrapper.prototype.query = function(params, success) {
 
 angular
   .module('myApp.services', ['ngResource'])
-  .factory('MeteringConcept', ['$resource', '$rootScope', 'Customer', 'Property', 'LevelList',
-    function($resource, $rootScope, Customer, Property, LevelList) {
+  .factory('MeteringConcept', ['$resource', '$rootScope', 'Customer', 'Property', 'LocationList', 'LevelList',
+    function($resource, $rootScope, Customer, Property, LocationList, LevelList) {
       var res = $resource('api/metering_concepts/:_id', {});
       var wrapper = new Wrapper(res, $rootScope);
       return {
@@ -108,6 +108,7 @@ angular
             console.log("Created concept", doc);
             Customer.create(doc._id);
             Property.create(doc._id);
+            LocationList.create(doc._id);
             LevelList.create(doc._id);
             (success || angular.noop)(doc);
           });
@@ -159,6 +160,29 @@ angular
         },
         save: function(property) {
           wrapper.save(property);
+        },
+        delete: function(id) { wrapper.delete(id); }
+      }
+    }
+  ])
+  .factory('LocationList', ['$resource', '$rootScope',
+    function($resource, $rootScope) {
+      var res = $resource('api/locationLists/:_id', {});
+      var wrapper = new Wrapper(res, $rootScope);
+      return {
+        create: function(id) {
+          wrapper.save({
+            _id: id + "_locationList",
+            meteringConceptId: id,
+            createdAt: new Date(),
+            locations: []
+          });
+        },
+        findByMeteringConcept: function(id, success) {
+          return wrapper.get(id + "_locationList", success);
+        },
+        save: function(locationList) {
+          wrapper.save(locationList);
         },
         delete: function(id) { wrapper.delete(id); }
       }

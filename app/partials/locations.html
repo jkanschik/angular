@@ -2,11 +2,15 @@
 
 <form name="form" novalidate>
   <fieldset>
-    <legend>Messstellen</legend>
+    <legend>
+      Messstellen
+      <div id="messageBox" class="label label-success pull-right" ng-show="message">{{message}}</div>
+    </legend>
 
     <table class="table table-striped table-condensed">
       <thead>
         <tr>
+          <th></th>
           <th>Messstellennummer</th>
           <th>Gerätetyp</th>
           <th>Artikelnummer</th>
@@ -16,9 +20,13 @@
       </thead>
       <tfoot>
         <tr>
-          <td>
+          <td></td>
+          <td ng-class="(newLocation.$errors.number && 'has-error' || '')">
             <input  type="text" class="form-control input-small" tabIndex="200"
-                    ng-model="newLocation.number" />
+                    ng-model="newLocation.number" ui-event="{blur: 'validateNewLocationNumber()'}"/>
+            <span class="help-block" ng-show="newLocation.$errors.number">
+              <div ng-repeat="error in newLocation.$errors.number">{{error}}</div>
+            </span>
           </td>
           <td class="col-lg-1">
             <input  type="text" ng-model="newLocation.type" class="form-control input-small" tabIndex="200"/>
@@ -37,7 +45,12 @@
         </tr>
       </tfoot>
       <tbody>
-        <tr ng-repeat="location in locations" ng-form="locationForm">
+        <tr ng-repeat="location in locations">
+          <td>
+            <a href="" tabIndex="-1" ng-click="delete($index)">
+              <i class="glyphicon glyphicon-remove"></i>
+            </a>
+          </td>
           <td ng-class="(location.$errors.number && 'has-error' || '')">
             <input  type="text" class="form-control input-small" required tabIndex="100"
                     ng-model="location.number" ui-event="{blur: 'checkNumber(location, $index)'}"/>
@@ -62,17 +75,16 @@
               Fehlende Messstellennummern: {{location.missingParents.join(",")}}
             </span>
           </td>
-          <td><pre>{{locationForm}}</pre></td>
         </tr>
       </tbody>
     </table>
 
-    <button ng-click="save()" class="btn btn-primary" tabIndex="300">Speichern</button>
+    <button ng-click="update()" class="btn btn-primary" tabIndex="300">Speichern</button>
     <button ng-click="reset()" class="btn" tabIndex="300">Reset</button>
   </fieldset>
 
 </form>
 
 <hr />
-<pre>form = {{locations | json}}</pre>
+<pre>Form = {{locations | json}}</pre>
 <pre>Master = {{master | json}}</pre>

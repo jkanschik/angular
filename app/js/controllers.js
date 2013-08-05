@@ -130,11 +130,55 @@ var controllers = {
     location.$errors.number.uniqueness = "Die Messstellennummer ist bereits vergeben!"
     Validierung aller Parents durchführen
   */
-  LocationsController: function($scope, $routeParams, $timeout) {
+  LocationsController: function($scope, $routeParams, $timeout, LocationList) {
+    $scope.master = LocationList.findByMeteringConcept($routeParams._id, function(doc) {$scope.reset();});
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
 
+    $scope.update = function(locations) {
+      if (!isDeepEmpty($scope.newLocation))
+        $scope.addNewLocation();
+      $scope.master.locations = angular.copy($scope.locations);
+      LocationList.save($scope.master);
+      $scope.message = "Messstellen erfolgreich gespeichert."
+      $timeout(function() {
+        jQuery("#messageBox").fadeOut(function() {
+          $scope.$apply(function() {
+            $scope.message = "";
+          })
+        });
+      }, 1000);
+    };
+
+    $scope.isValid = function() {
+      var valid = true;
+      angular.forEach($scope.locations, function(value) {
+        if (!angular.equals(value.$errors, {}))
+          valid = false;
+        if (!angular.equals(value.missingParents, []))
+          valid = false;
+      });
+      return valid;
+    };
+
+    $scope.delete = function(index) {
+      $scope.locations.splice(index, 1);
+      $scope.validateAllParentLocations();
+    };
+
+    $scope.reset = function() {
+      $scope.locations = angular.copy($scope.master.locations);
+      $scope.validateAllParentLocations();
+    };
+
+    $scope.validateNewLocationNumber = function() {
+      if (isDeepEmpty($scope.newLocation))
+        return;
+      $scope.validateNumber($scope.newLocation);
+    };
 
     $scope.validateNumber = function(location, index) {
+      if (!location.$errors)
+        location.$errors = {};
       var errors = {};
       var validates = true;
       // check uniqueness
@@ -163,15 +207,12 @@ var controllers = {
      * to the list of parents which don't refer to an existing location.
      */
     $scope.validateParentLocations = function(location) {
-      console.log("Validating parents ", location.parents, " of location ", location.number);
-
       location.missingParents = angular.copy(location.parents);
 
       angular.forEach($scope.locations, function(value) {
         var ix = location.missingParents.indexOf(value.number);
         if (ix > -1)
           location.missingParents.splice(ix, 1);
-        console.log(location.missingParents);
       });
     };
 
@@ -189,7 +230,6 @@ var controllers = {
     $scope.changeNumber = function(location) {
       if (location.oldNumber == location.number)
         return;
-      console.log("Rename location ", location.oldNumber, " to ", location.number);
       angular.forEach($scope.locations, function(value) {
         // Fall 2a)
         var ix = value.missingParents.indexOf(location.number);
@@ -233,20 +273,7 @@ var controllers = {
       };
     };
 
-
-
-$scope.locations = [
-  {id: "id1", number: "1.00", oldNumber: "1.00", type: "MEZ", parents: [], $errors: {}},
-  {id: "id2", number: "1.01", oldNumber: "1.01", type: "MEZ", parents: ["1.00"], $errors: {}},
-  {id: "id3", number: "1.02", oldNumber: "1.02", type: "MEZ", parents: ["1.01", "1.02"], $errors: {}}
-];
-
-angular.forEach($scope.locations, function(location, index) {
-  $scope.validateParentLocations(location);
-});
-
-
-
+    $scope.reset();
   },
 
 
@@ -312,7 +339,7 @@ angular
   .controller('MeteringConcept', ['$scope', '$routeParams', 'MeteringConcept', controllers.MeteringConceptController])
   .controller('Customer', ['$scope', '$routeParams', 'Customer', controllers.CustomerController])
   .controller('Property', ['$scope', '$routeParams', 'Property', controllers.PropertyController])
-  .controller('Locations', ['$scope', '$routeParams', '$timeout', controllers.LocationsController])
+  .controller('Locations', ['$scope', '$routeParams', '$timeout', 'LocationList', controllers.LocationsController])
   .controller('Level', ['$scope', '$routeParams', '$timeout', 'LevelList', controllers.LevelController])
   ;
 
