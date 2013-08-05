@@ -227,14 +227,24 @@ angular.forEach($scope.locations, function(location, index) {
 
   LevelController: function($scope, $routeParams, $timeout, LevelList) {
     $scope.sortableOptions = {
-      distance: 15
+      distance: 15 // mouse must be moved at least 15px before dragging starts
     };
     $scope.master = LevelList.findByMeteringConcept($routeParams._id, function(doc) {$scope.reset();});
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
 
     $scope.update = function(levelList) {
+      if (!isDeepEmpty($scope.newLevel))
+        $scope.copyNewLevel();
       $scope.master = angular.copy($scope.levelList);
       LevelList.save($scope.master);
+      $scope.message = "Etagen erfolgreich gespeichert."
+      $timeout(function() {
+        jQuery("#messageBox").fadeOut(function() {
+          $scope.$apply(function() {
+            $scope.message = "";
+          })
+        });
+      }, 1000);
     };
 
     $scope.delete = function(index) {
@@ -249,16 +259,20 @@ angular.forEach($scope.locations, function(location, index) {
       $scope.levelList.levels = LevelList.defaults();
     };
 
+    $scope.copyNewLevel = function() {
+      var level = angular.copy($scope.newLevel);
+      $scope.levelList.levels.push(level);
+      $scope.newLevel = {};
+    };
+
     $scope.createLevelWithTab = function(event, newLevel, element) {
       if (isDeepEmpty(newLevel))
         return;
       if (event.keyCode == 9 && !event.shiftKey) {
-        var level = angular.copy(newLevel);
-        $scope.levelList.levels.push(level);
-        $scope.newLevel = {};
+        $scope.copyNewLevel();
         $timeout(function() {
           jQuery("tfoot input").focus();
-        }, 50);
+        }, 10);
       };
     };
 

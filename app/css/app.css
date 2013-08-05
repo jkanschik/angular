@@ -11,3 +11,7 @@
   background-color: #8aba17;
 }
 
+legend small {
+  font-size: 1em;
+  font-style: normal;
+}
