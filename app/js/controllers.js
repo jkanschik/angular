@@ -130,7 +130,7 @@ var controllers = {
     location.$errors.number.uniqueness = "Die Messstellennummer ist bereits vergeben!"
     Validierung aller Parents durchführen
   */
-  LocationsController: function($scope, $routeParams) {
+  LocationsController: function($scope, $routeParams, $timeout) {
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
 
 
@@ -179,45 +179,70 @@ var controllers = {
       angular.forEach($scope.locations, function(location, index) {
         $scope.validateParentLocations(location);
       });
-    }
-
-    $scope.watchLocationNumber = function(location, index) {
-      $scope.$watch('locations.' + index + '.number', function(newValue, oldValue) {
-        // skip, if nothing has changed
-        if (oldValue == newValue)
-          return;
-        // skip, if it doesn't validate
-        if (!$scope.validateNumber(location, index)) {
-          $scope.validateAllParentLocations();
-          return;
-        }
-        console.log("Location number has been changed from ", oldValue, " to ", newValue);
-        angular.forEach($scope.locations, function(value) {
-          // Fall 2a)
-          var ix = value.missingParents.indexOf(newValue);
-          if (ix > -1)
-            value.missingParents.splice(ix, 1);
-          // Fall 2d)
-          var ix = value.parents.indexOf(oldValue);
-          if (ix > -1) {
-            // Setting 'value.parents[ix] = newValue;' doesn't work; it doesn't update the input field
-            var newParents = angular.copy(value.parents);
-            newParents[ix] = newValue;
-            value.parents = newParents; // this is picked up by angular because the object itself is changed ;-)
-          }
-        });
-      });
     };
 
+    $scope.checkNumber = function(location, index) {
+      if ($scope.validateNumber(location, index))
+        $scope.changeNumber(location);
+    };
+
+    $scope.changeNumber = function(location) {
+      if (location.oldNumber == location.number)
+        return;
+      console.log("Rename location ", location.oldNumber, " to ", location.number);
+      angular.forEach($scope.locations, function(value) {
+        // Fall 2a)
+        var ix = value.missingParents.indexOf(location.number);
+        if (ix > -1)
+          value.missingParents.splice(ix, 1);
+        // Fall 2d)
+        var ix = value.parents.indexOf(location.oldNumber);
+        if (ix > -1) {
+          // Setting 'value.parents[ix] = location.number;' doesn't work; it doesn't update the input field
+          var newParents = angular.copy(value.parents);
+          newParents[ix] = location.number;
+          value.parents = newParents; // this is picked up by angular because the object itself is changed ;-)
+        }
+      });
+      location.oldNumber = location.number;
+    };
+
+    $scope.addNewLocation = function() {
+      // add a copy to locations
+      var location = angular.copy($scope.newLocation);
+      $scope.locations.push(location);
+      $scope.newLocation = {};
+      // set defaults
+      location.oldNumber = location.number;
+      location.missingParents = [];
+      location.parents = location.parents || [];
+      location.$errors = {};
+      // validate
+      $scope.validateNumber(location, $scope.locations.length - 1);
+      $scope.validateAllParentLocations();
+    };
+
+    $scope.createLocationWithTab = function(event) {
+      if (isDeepEmpty($scope.newLocation))
+        return;
+      if (event.keyCode == 9 && !event.shiftKey) {
+        $scope.addNewLocation();
+        $timeout(function() {
+          jQuery("tfoot input").first().focus();
+        }, 10);
+      };
+    };
+
+
+
 $scope.locations = [
-  {id: "id1", number: "1.00", type: "MEZ", parents: [], $errors: {}},
-  {id: "id2", number: "1.01", type: "MEZ", parents: ["1.00"], $errors: {}},
-  {id: "id3", number: "1.02", type: "MEZ", parents: ["1.01", "1.02"], $errors: {}}
+  {id: "id1", number: "1.00", oldNumber: "1.00", type: "MEZ", parents: [], $errors: {}},
+  {id: "id2", number: "1.01", oldNumber: "1.01", type: "MEZ", parents: ["1.00"], $errors: {}},
+  {id: "id3", number: "1.02", oldNumber: "1.02", type: "MEZ", parents: ["1.01", "1.02"], $errors: {}}
 ];
 
 angular.forEach($scope.locations, function(location, index) {
   $scope.validateParentLocations(location);
-  $scope.watchLocationNumber(location, index);
 });
 
 
@@ -287,7 +312,7 @@ angular
   .controller('MeteringConcept', ['$scope', '$routeParams', 'MeteringConcept', controllers.MeteringConceptController])
   .controller('Customer', ['$scope', '$routeParams', 'Customer', controllers.CustomerController])
   .controller('Property', ['$scope', '$routeParams', 'Property', controllers.PropertyController])
-  .controller('Locations', ['$scope', '$routeParams', controllers.LocationsController])
+  .controller('Locations', ['$scope', '$routeParams', '$timeout', controllers.LocationsController])
   .controller('Level', ['$scope', '$routeParams', '$timeout', 'LevelList', controllers.LevelController])
   ;
 

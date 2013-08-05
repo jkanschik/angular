@@ -14,41 +14,65 @@
           <th>Vorgänger (Messstellen)</th>
         </tr>
       </thead>
+      <tfoot>
+        <tr>
+          <td>
+            <input  type="text" class="form-control input-small" tabIndex="200"
+                    ng-model="newLocation.number" />
+          </td>
+          <td class="col-lg-1">
+            <input  type="text" ng-model="newLocation.type" class="form-control input-small" tabIndex="200"/>
+          </td>
+          <td class="col-lg-1">
+            <input  type="text" ng-model="newLocation.articleNumber" class="form-control input-small" tabIndex="200"/>
+          </td>
+          <td class="col-lg-1">
+            <input  type="text" ng-model="newLocation.serialNumber" class="form-control input-small" tabIndex="200"/>
+          </td>
+          <td class="col-lg-8">
+            <input  type="text" class="form-control input-small" tabIndex="200"
+                    ng-keydown="createLocationWithTab($event)"
+                    ng-model="newLocation.parents" ng-list />
+          </td>
+        </tr>
+      </tfoot>
       <tbody>
-        <tr ng-repeat="location in locations" name="{{location.id}}">
+        <tr ng-repeat="location in locations" ng-form="locationForm">
           <td ng-class="(location.$errors.number && 'has-error' || '')">
-            <input  type="text" class="form-control input-small" required
-                    ng-model="location.number" ng-model-onblur />
+            <input  type="text" class="form-control input-small" required tabIndex="100"
+                    ng-model="location.number" ui-event="{blur: 'checkNumber(location, $index)'}"/>
             <span class="help-block" ng-show="location.$errors.number">
               <div ng-repeat="error in location.$errors.number">{{error}}</div>
             </span>
           </td>
           <td class="col-lg-1">
-            <input  type="text" ng-model="location.type" class="form-control input-small"/>
+            <input  type="text" ng-model="location.type" class="form-control input-small" tabIndex="100"/>
           </td>
           <td class="col-lg-1">
-            <input  type="text" ng-model="location.articleNumber" class="form-control input-small"/>
+            <input  type="text" ng-model="location.articleNumber" class="form-control input-small" tabIndex="100"/>
           </td>
           <td class="col-lg-1">
-            <input  type="text" ng-model="location.serialNumber" class="form-control input-small"/>
+            <input  type="text" ng-model="location.serialNumber" class="form-control input-small" tabIndex="100"/>
           </td>
           <td class="col-lg-8" ng-class="((location.missingParents.length > 0) && 'has-error' || '')">
-            <input  type="text" class="form-control input-small"
+            <input  type="text" class="form-control input-small" tabIndex="100"
                     ng-model="location.parents" ng-model-onblur ng-list
                     ng-change="validateParentLocations(location)" />
             <span class="help-block" ng-show="location.missingParents.length > 0">
               Fehlende Messstellennummern: {{location.missingParents.join(",")}}
             </span>
           </td>
+          <td><pre>{{locationForm}}</pre></td>
         </tr>
       </tbody>
     </table>
 
-    <button ng-click="save()" class="btn btn-primary">Speichern</button>
-    <button ng-click="reset()" class="btn">Reset</button>
+    <button ng-click="save()" class="btn btn-primary" tabIndex="300">Speichern</button>
+    <button ng-click="reset()" class="btn" tabIndex="300">Reset</button>
   </fieldset>
 
 </form>
 
 <hr />
 <pre>form = {{locations | json}}</pre>
+<pre>Master = {{master | json}}</pre>
