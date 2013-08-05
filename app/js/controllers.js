@@ -13,7 +13,7 @@ var isDeepEmpty = function(object) {
 
 
 var controllers = {
-  WelcomeController: function($scope, $location, MeteringConcept, Customer) {
+  WelcomeController: function($scope, $location, $timeout, MeteringConcept, Customer) {
     $scope.meteringConcepts = MeteringConcept.all();
 
     $scope.new = function() {
@@ -33,9 +33,13 @@ var controllers = {
     }
   },
 
-  MeteringConceptController: function($scope, $routeParams, MeteringConcept) {
+  MeteringConceptController: function($scope, $routeParams, $timeout, MeteringConcept) {
     $scope.master = MeteringConcept.get($routeParams._id, function(doc) {$scope.reset();});
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
+
+    $scope.initFocus = function() {
+      $timeout(function() {jQuery("form input").first().focus();});
+    };
 
     $scope.save = function(meteringConcept) {
       $scope.master = angular.copy($scope.meteringConcept);
@@ -44,14 +48,19 @@ var controllers = {
    
     $scope.reset = function() {
       $scope.meteringConcept = angular.copy($scope.master);
+      $scope.initFocus();
     };
 
     $scope.reset();
   },
 
-  CustomerController: function($scope, $routeParams, Customer) {
+  CustomerController: function($scope, $routeParams, $timeout, Customer) {
     $scope.master = Customer.findByMeteringConcept($routeParams._id, function(doc) {$scope.reset();});
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
+
+    $scope.initFocus = function() {
+      $timeout(function() {jQuery("form input").first().focus();});
+    };
 
     $scope.update = function(customer) {
       $scope.master = angular.copy($scope.customer);
@@ -60,15 +69,20 @@ var controllers = {
 
     $scope.reset = function() {
       $scope.customer = angular.copy($scope.master);
+      $scope.initFocus();
     };
     
     $scope.reset();
   },
 
-  PropertyController: function($scope, $routeParams, Property) {
+  PropertyController: function($scope, $routeParams, $timeout, Property) {
     $scope.master = Property.findByMeteringConcept($routeParams._id, function(doc) {$scope.reset();});
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
    
+    $scope.initFocus = function() {
+      $timeout(function() {jQuery("form input").first().focus();});
+    };
+
     $scope.update = function(property) {
       $scope.master= angular.copy(property);
       Property.save($scope.master);
@@ -76,6 +90,7 @@ var controllers = {
    
     $scope.reset = function() {
       $scope.property = angular.copy($scope.master);
+      $scope.initFocus();
     };
 
     $scope.deleteContactPartner = function(index) {
@@ -134,6 +149,12 @@ var controllers = {
     $scope.master = LocationList.findByMeteringConcept($routeParams._id, function(doc) {$scope.reset();});
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
 
+    $scope.initFocus = function() {
+      $timeout(function() {
+        jQuery("form table tfoot input").first().focus();
+      });
+    };
+
     $scope.update = function(locations) {
       if (!isDeepEmpty($scope.newLocation))
         $scope.addNewLocation();
@@ -168,6 +189,7 @@ var controllers = {
     $scope.reset = function() {
       $scope.locations = angular.copy($scope.master.locations);
       $scope.validateAllParentLocations();
+      $scope.initFocus();
     };
 
     $scope.validateNewLocationNumber = function() {
@@ -281,8 +303,12 @@ var controllers = {
     $scope.sortableOptions = {
       distance: 15 // mouse must be moved at least 15px before dragging starts
     };
-    $scope.master = LevelList.findByMeteringConcept($routeParams._id, function(doc) {$scope.reset();});
+    $scope.master = LevelList.findByMeteringConcept($routeParams._id, function(doc) { $scope.reset(); });
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
+
+    $scope.initFocus = function() {
+      $timeout(function() {jQuery("form table tfoot input").first().focus();});
+    };
 
     $scope.update = function(levelList) {
       if (!isDeepEmpty($scope.newLevel))
@@ -305,6 +331,7 @@ var controllers = {
 
     $scope.reset = function() {
       $scope.levelList = angular.copy($scope.master);
+      $scope.initFocus();
     };
     
     $scope.setDefaults = function() {
@@ -335,10 +362,10 @@ var controllers = {
 
 angular
   .module('myApp.controllers', [])
-  .controller('Welcome', ['$scope', '$location', 'MeteringConcept', 'Customer', controllers.WelcomeController])
-  .controller('MeteringConcept', ['$scope', '$routeParams', 'MeteringConcept', controllers.MeteringConceptController])
-  .controller('Customer', ['$scope', '$routeParams', 'Customer', controllers.CustomerController])
-  .controller('Property', ['$scope', '$routeParams', 'Property', controllers.PropertyController])
+  .controller('Welcome', ['$scope', '$location', '$timeout', 'MeteringConcept', 'Customer', controllers.WelcomeController])
+  .controller('MeteringConcept', ['$scope', '$routeParams', '$timeout', 'MeteringConcept', controllers.MeteringConceptController])
+  .controller('Customer', ['$scope', '$routeParams', '$timeout', 'Customer', controllers.CustomerController])
+  .controller('Property', ['$scope', '$routeParams', '$timeout', 'Property', controllers.PropertyController])
   .controller('Locations', ['$scope', '$routeParams', '$timeout', 'LocationList', controllers.LocationsController])
   .controller('Level', ['$scope', '$routeParams', '$timeout', 'LevelList', controllers.LevelController])
   ;
