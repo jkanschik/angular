@@ -12,10 +12,15 @@
         <tr>
           <th></th>
           <th>Messstellennummer</th>
+          <th>Messstellenbezeichnung (Kunde)</th>
           <th>Gerätetyp</th>
           <th>Artikelnummer</th>
           <th>Seriennummer</th>
           <th>Vorgänger (Messstellen)</th>
+          <th>Gebäudeteil</th>
+          <th>Etage</th>
+          <th>Raumbeschreibung (Kunde)</th>
+          <th>Einbauort</th>
         </tr>
       </thead>
       <tfoot>
@@ -29,6 +34,9 @@
             </span>
           </td>
           <td class="col-lg-1">
+            <input  type="text" ng-model="newLocation.label" class="form-control input-small" tabIndex="200"/>
+          </td>
+          <td class="col-lg-1">
             <input  type="text" ng-model="newLocation.type" class="form-control input-small" tabIndex="200"/>
           </td>
           <td class="col-lg-1">
@@ -37,10 +45,21 @@
           <td class="col-lg-1">
             <input  type="text" ng-model="newLocation.serialNumber" class="form-control input-small" tabIndex="200"/>
           </td>
-          <td class="col-lg-8">
+          <td class="col-lg-1">
             <input  type="text" class="form-control input-small" tabIndex="200"
-                    ng-keydown="createLocationWithTab($event)"
                     ng-model="newLocation.parents" ng-list />
+          </td>
+          <td class="col-lg-1">
+            <input  type="text" ng-model="newLocation.building" class="form-control input-small" tabIndex="200"/>
+          </td>
+          <td class="col-lg-1">
+            <input  type="text" ng-model="newLocation.level" class="form-control input-small" tabIndex="200"/>
+          </td>
+          <td class="col-lg-1">
+            <input  type="text" ng-model="newLocation.roomLabel" class="form-control input-small" tabIndex="200"/>
+          </td>
+          <td class="col-lg-1">
+            <input  type="text" ng-model="newLocation.mountingLocation" class="form-control input-small" tabIndex="200" ng-keydown="createLocationWithTab($event)" />
           </td>
         </tr>
       </tfoot>
@@ -59,6 +78,9 @@
             </span>
           </td>
           <td class="col-lg-1">
+            <input  type="text" ng-model="location.label" class="form-control input-small" tabIndex="100"/>
+          </td>
+          <td class="col-lg-1">
             <input  type="text" ng-model="location.type" class="form-control input-small" tabIndex="100"/>
           </td>
           <td class="col-lg-1">
@@ -67,13 +89,25 @@
           <td class="col-lg-1">
             <input  type="text" ng-model="location.serialNumber" class="form-control input-small" tabIndex="100"/>
           </td>
-          <td class="col-lg-8" ng-class="((location.missingParents.length > 0) && 'has-error' || '')">
+          <td class="col-lg-1" ng-class="((location.missingParents.length > 0) && 'has-error' || '')">
             <input  type="text" class="form-control input-small" tabIndex="100"
                     ng-model="location.parents" ng-model-onblur ng-list
                     ng-change="validateParentLocations(location)" />
             <span class="help-block" ng-show="location.missingParents.length > 0">
               Fehlende Messstellennummern: {{location.missingParents.join(",")}}
             </span>
+          </td>
+          <td class="col-lg-1">
+            <input  type="text" ng-model="location.building" class="form-control input-small" tabIndex="100"/>
+          </td>
+          <td class="col-lg-1">
+            <input  type="text" ng-model="location.level" class="form-control input-small" tabIndex="100"/>
+          </td>
+          <td class="col-lg-1">
+            <input  type="text" ng-model="location.roomLabel" class="form-control input-small" tabIndex="100"/>
+          </td>
+          <td class="col-lg-1">
+            <input  type="text" ng-model="location.mountingLocation" class="form-control input-small" tabIndex="100"/>
           </td>
         </tr>
       </tbody>
