@@ -1,6 +1,16 @@
 'use strict';
 
-/* Controllers */
+
+var isDeepEmpty = function(object) {
+  var isEmpty = true;
+  angular.forEach(object, function(value) {
+    if (value && value != "")
+      isEmpty = false;
+  });
+  return isEmpty;
+}
+
+
 
 var controllers = {
   WelcomeController: function($scope, $location, MeteringConcept, Customer) {
@@ -215,7 +225,10 @@ angular.forEach($scope.locations, function(location, index) {
   },
 
 
-  LevelController: function($scope, $routeParams, LevelList) {
+  LevelController: function($scope, $routeParams, $timeout, LevelList) {
+    $scope.sortableOptions = {
+      distance: 15
+    };
     $scope.master = LevelList.findByMeteringConcept($routeParams._id, function(doc) {$scope.reset();});
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
 
@@ -234,23 +247,22 @@ angular.forEach($scope.locations, function(location, index) {
     
     $scope.setDefaults = function() {
       $scope.levelList.levels = LevelList.defaults();
-    }
+    };
+
+    $scope.createLevelWithTab = function(event, newLevel, element) {
+      if (isDeepEmpty(newLevel))
+        return;
+      if (event.keyCode == 9 && !event.shiftKey) {
+        var level = angular.copy(newLevel);
+        $scope.levelList.levels.push(level);
+        $scope.newLevel = {};
+        $timeout(function() {
+          jQuery("tfoot input").focus();
+        }, 50);
+      };
+    };
 
     $scope.reset();
-
-    $scope.new = function() {
-      $scope.newLevel = {};
-    };
-
-    $scope.add = function() {
-      var level = angular.copy($scope.newLevel);
-      $scope.levelList.levels.push(level);
-      $scope.newLevel = {};
-    };
-
-    $scope.save = function() {
-      LevelList.save($scope.levelList);
-    };
   }
 
 }
@@ -262,7 +274,7 @@ angular
   .controller('Customer', ['$scope', '$routeParams', 'Customer', controllers.CustomerController])
   .controller('Property', ['$scope', '$routeParams', 'Property', controllers.PropertyController])
   .controller('Locations', ['$scope', '$routeParams', controllers.LocationsController])
-  .controller('Level', ['$scope', '$routeParams', 'LevelList', controllers.LevelController])
+  .controller('Level', ['$scope', '$routeParams', '$timeout', 'LevelList', controllers.LevelController])
   ;
 
 

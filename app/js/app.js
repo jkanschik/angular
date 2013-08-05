@@ -3,7 +3,7 @@
 
 // Declare app level module which depends on filters, and services
 var app = angular
-  .module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 'myApp.controllers'])
+  .module('myApp', ['ui.sortable', 'ui.utils', 'myApp.filters', 'myApp.services', 'myApp.directives', 'myApp.controllers'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/', {templateUrl: 'partials/welcome.html', controller: 'Welcome'});
     $routeProvider.when('/meteringConcepts/:_id', {templateUrl: 'partials/general.html', controller: 'MeteringConcept'});

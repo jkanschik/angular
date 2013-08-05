@@ -18,12 +18,12 @@
       <thead>
         <tr>
           <th width="1em">
-            <a href="" tabIndex="-1" ng-click="new(); adding = true"><i class="glyphicon glyphicon-plus-sign"></i></a>
+            <!--<a href="" tabIndex="-1" ng-click="new(); adding = true"><i class="glyphicon glyphicon-plus-sign"></i></a>-->
           </th>
           <th>Bezeichnung</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody ui-sortable="sortableOptions" ng-model="levelList.levels">
         <tr ng-repeat="level in levelList.levels | filter: search"  ng-form="levelForm">
           <td>
             <a href="" tabIndex="-1" ng-click="delete($index)">
@@ -35,15 +35,19 @@
             <span class="help-block" ng-show="levelForm.label.$error.required">Die Bezeichnung ist ein Pflichtfeld!</span>
           </td>
         </tr>
+      </tbody>
+      <tfoot>
+        <!-- New level -->
         <tr>
           <td>
-            <a href="" ng-click="add()"><i class="glyphicon glyphicon-plus-sign"></i></a>
           </td>
           <td>
-            <span><input type="text" name="newLevel" ng-model="newLevel.label"/></span>
+            <input  type="text" class="form-control input-small"
+                    ng-keydown="createLevelWithTab($event, newLevel, this)"
+                    ng-model="newLevel.label"/>
           </td>
         </tr>
-      </tbody>
+      </tfoot>
     </table>
 
     <button ng-click="update()" class="btn btn-primary" type="submit">Speichern</button>
@@ -53,3 +57,7 @@
   </fieldset>
 
 </form>
+
+
+<pre>Levels: {{levelList.levels | json}}</pre>
+<pre>New level: {{newLevel | json}}</pre>
