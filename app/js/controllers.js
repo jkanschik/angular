@@ -265,8 +265,8 @@ angular.forEach($scope.locations, function(location, index) {
       $scope.newLevel = {};
     };
 
-    $scope.createLevelWithTab = function(event, newLevel, element) {
-      if (isDeepEmpty(newLevel))
+    $scope.createLevelWithTab = function(event) {
+      if (isDeepEmpty($scope.newLevel))
         return;
       if (event.keyCode == 9 && !event.shiftKey) {
         $scope.copyNewLevel();

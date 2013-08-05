@@ -29,7 +29,7 @@
           <td></td>
           <td>
             <input  type="text" class="form-control input-small" tabIndex="200"
-                    ng-keydown="createLevelWithTab($event, newLevel, this)"
+                    ng-keydown="createLevelWithTab($event)"
                     ng-model="newLevel.label"/>
           </td>
         </tr>
@@ -57,6 +57,7 @@
 
 </form>
 
-<pre>Levels: {{message | json}}</pre>
+<hr/>
+
 <pre>Levels: {{levelList.levels | json}}</pre>
 <pre>New level: {{newLevel | json}}</pre>
