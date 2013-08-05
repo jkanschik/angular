@@ -33,7 +33,7 @@ var controllers = {
     }
   },
 
-  MeteringConceptController: function($scope, $routeParams, $timeout, MeteringConcept) {
+  MeteringConceptController: function($scope, $routeParams, $timeout, $dialog, MeteringConcept) {
     $scope.master = MeteringConcept.get($routeParams._id, function(doc) {$scope.reset();});
     $scope.baseUrl = "/meteringConcepts/" + $routeParams._id;
 
@@ -363,7 +363,7 @@ var controllers = {
 angular
   .module('myApp.controllers', [])
   .controller('Welcome', ['$scope', '$location', '$timeout', 'MeteringConcept', 'Customer', controllers.WelcomeController])
-  .controller('MeteringConcept', ['$scope', '$routeParams', '$timeout', 'MeteringConcept', controllers.MeteringConceptController])
+  .controller('MeteringConcept', ['$scope', '$routeParams', '$timeout', '$dialog', 'MeteringConcept', controllers.MeteringConceptController])
   .controller('Customer', ['$scope', '$routeParams', '$timeout', 'Customer', controllers.CustomerController])
   .controller('Property', ['$scope', '$routeParams', '$timeout', 'Property', controllers.PropertyController])
   .controller('Locations', ['$scope', '$routeParams', '$timeout', 'LocationList', controllers.LocationsController])
