@@ -10,6 +10,45 @@ angular.module('myApp.directives', [])
       elm.text(version);
     };
   }])
+  /* myAccessky replaces the standard HTML accesskey attribute in a browser independent way.
+     Example: <a my-accesskey='Alt-M'> is triggered on Alt-m
+     Some caveats:
+      1.  For firefox, the handler has to be on keypress, because on keydown the preventDefault doesn't work.
+          If keydown were used in FF, ALT-L would open the menu.
+      2.  In keydown, event.which corresponds to uppercase letters (ALT-m and ALT-SHIFT-m would result in event.which = 'M').
+          In keypress, event.which corresponds to uppercase or lowercase letters (for ALT-m event.which = 'm', but 'M' for ALT-SHIFT-m).
+          As a result, which is normalized to uppercase letters in function eventMatches()
+  */
+  .directive('myAccesskey', ['$document', function($document) {
+    return {
+      restrict: 'A',
+      link: function(scope, elm, attr) {
+        var key = attr.myAccesskey.toUpperCase();
+        var options = {
+          isAlt: (key.indexOf("ALT") > -1),
+          which: key.substr(-1, 1)
+        };
+        var eventMatches = function(e) {
+          if (options.isAlt && !e.altKey)
+            return false;
+          if (options.which != String.fromCharCode(e.which).toUpperCase())
+            return false;
+          return true;
+        };
+        var handler = function(e) {
+          if (eventMatches(e)) {
+            elm.click();
+            e.preventDefault();
+            return false;
+          }
+        };
+        if (navigator.userAgent.indexOf("Firefox") > -1)
+          $document.keypress(handler);
+        else
+          $document.keydown(handler);
+      }
+    }
+  }])
   // Shows online state and manages any changes to the online change via the controller.
   .directive('online', ['$rootScope', function($rootScope) {
     return {
