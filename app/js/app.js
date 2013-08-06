@@ -17,20 +17,6 @@ var app = angular
 app.run(
 	function($window, $rootScope) {
     $rootScope.online = navigator.onLine;
-    $rootScope.getDirtyDocuments = function() {
-      var dirtyDocuments = [];
-      for (var key in localStorage) {
-        var entity = localStorage.getItem(key);
-        entity = JSON.parse(entity);
-        if (entity.notSynchronized)
-          dirtyDocuments.push(entity);
-      }
-      return dirtyDocuments;
-    };
-
-    $rootScope.pushDirtyDocuments = function() {
-
-    };
 
     $rootScope.toogleOnlineModus = function() {
       $rootScope.online = !$rootScope.online;
@@ -48,11 +34,4 @@ app.run(
       });
     }, false);
 
-    $rootScope.$watch('online', function(newValue, oldValue) {
-      console.log("Watched online, old value: ", oldValue, " and new value ", newValue);
-      if (!oldValue && newValue) {
-        $rootScope.dirtyDocuments = $rootScope.getDirtyDocuments();
-        jQuery("#myModal").modal();
-      }
-    })
 });
