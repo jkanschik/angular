@@ -84,8 +84,18 @@ var controllers = {
     };
 
     $scope.update = function(property) {
-      $scope.master= angular.copy(property);
+      if (!isDeepEmpty($scope.newPartner))
+        $scope.copyNewPartner();
+      $scope.master = angular.copy(property);
       Property.save($scope.master);
+      $scope.message = "Liegenschaftsdaten erfolgreich gespeichert."
+      $timeout(function() {
+        jQuery("#messageBox").fadeOut(function() {
+          $scope.$apply(function() {
+            $scope.message = "";
+          })
+        });
+      }, 1000);
     };
    
     $scope.reset = function() {
@@ -97,15 +107,23 @@ var controllers = {
       $scope.property.contactPartners.splice(index, 1);
     };
 
-    $scope.createContactPartner = function() {
-      $scope.property.contactPartners.push({});
+    $scope.copyNewPartner = function() {
+      var partner = angular.copy($scope.newPartner);
+      $scope.property.contactPartners.push(partner);
+      $scope.newPartner = {};
     };
-   
-    $scope.createContactPartnerWithTab = function($event, partner) {
-      if ($event.idCode == 9 && !$event.shiftKey && !angular.equals(partner, {}))
-        $scope.createContactPartner();
+
+    $scope.createContactPartnerWithTab = function(event) {
+      if (isDeepEmpty($scope.newPartner))
+        return;
+      if (event.keyCode == 9 && !event.shiftKey) {
+        $scope.copyNewPartner();
+        $timeout(function() {
+          jQuery("tfoot input").first().focus();
+        }, 10);
+      };
     };
-   
+
     $scope.reset();
   },
 
