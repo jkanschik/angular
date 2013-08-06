@@ -13,25 +13,3 @@ var app = angular
     $routeProvider.when('/meteringConcepts/:_id/levels', {templateUrl: 'partials/levels.html', controller: 'Level'});
     $routeProvider.otherwise({redirectTo: '/'});
   }]);
-
-app.run(
-	function($window, $rootScope) {
-    $rootScope.online = navigator.onLine;
-
-    $rootScope.toogleOnlineModus = function() {
-      $rootScope.online = !$rootScope.online;
-    };
-
-    $window.addEventListener("offline", function () {
-      $rootScope.$apply(function() {
-        $rootScope.online = false;
-      });
-    }, false);
-
-    $window.addEventListener("online", function () {
-      $rootScope.$apply(function() {
-        $rootScope.online = true;
-      });
-    }, false);
-
-});

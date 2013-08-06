@@ -13,76 +13,6 @@ var isDeepEmpty = function(object) {
 
 
 var controllers = {
-  SynchronisationController: function($scope, $rootScope, MeteringConcept, Customer, Property, LocationList, LevelList) {
-
-    $rootScope.$watch('online', function(newValue, oldValue) {
-      console.log("Watched online, old value: ", oldValue, " and new value ", newValue);
-      if (!oldValue && newValue) {
-        $scope.dirtyDocuments = $scope.getDirtyDocuments();
-        $scope.modal = jQuery("#myModal").modal();
-      }
-    });
-
-    $scope.getDirtyDocuments = function() {
-      var dirtyDocuments = {};
-      for (var id in localStorage) {
-        var resource = localStorage.getItem(id);
-        resource = JSON.parse(resource);
-        if (resource.notSynchronized) {
-          var meteringConceptId = id.substring(0, 36);
-          var meteringConcept = MeteringConcept.get(meteringConceptId);
-
-          var row = dirtyDocuments[meteringConceptId];
-          if (!row)
-            row = dirtyDocuments[meteringConceptId] = {
-              meteringConcept: meteringConcept,
-              labels: [],
-              resources: []
-            };
-
-          var entityType = id.substring(36);
-          switch(entityType) {
-            case "":
-              row.labels.push("Allgemein");
-              row.resources.push(meteringConcept);
-              break;
-            case "_customer":
-              row.labels.push("Kunde");
-              row.resources.push(Customer.get(id));
-              break;
-            case "_property":
-              row.labels.push("Liegenschaft");
-              row.resources.push(Property.get(id));
-              break;
-            case "_locationList":
-              row.labels.push("Messstellen");
-              row.resources.push(LocationList.get(id));
-              break;
-            case "_levelList":
-              row.labels.push("Etagen");
-              row.resources.push(LevelList.get(id));
-              break;
-          }
-        }
-      }
-      return dirtyDocuments;
-    };
-
-    $scope.goOnline = function() {
-      console.log("Going online");
-
-      $scope.modal.modal('hide');
-    };
-
-    $scope.stayOffline = function() {
-      console.log("Staying offline");
-      $rootScope.online = false;
-    };
-
-
-
-  },
-
   WelcomeController: function($scope, $location, $timeout, MeteringConcept, Customer) {
     $scope.meteringConcepts = MeteringConcept.all();
 
@@ -432,7 +362,6 @@ var controllers = {
 
 angular
   .module('myApp.controllers', [])
-  .controller('Synchronisation', ['$scope', '$rootScope', 'MeteringConcept', 'Customer', 'Property', 'LocationList', 'LevelList', controllers.SynchronisationController])
   .controller('Welcome', ['$scope', '$location', '$timeout', 'MeteringConcept', 'Customer', controllers.WelcomeController])
   .controller('MeteringConcept', ['$scope', '$routeParams', '$timeout', '$dialog', 'MeteringConcept', controllers.MeteringConceptController])
   .controller('Customer', ['$scope', '$routeParams', '$timeout', 'Customer', controllers.CustomerController])

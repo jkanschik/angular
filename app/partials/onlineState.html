@@ -1,0 +1,42 @@
+<div>
+  <span class="label" ng-show="onlineState == 'online'" ng-click="toggle()">
+    Online Modus
+  </span>
+  <span class="label label-warning"
+      ng-show="onlineState == 'available'" ng-click="toggle()">
+      Offline Modus - online available
+  </span>
+  <span class="label label-warning" ng-show="onlineState == 'offline'" ng-click="toggle()">
+    Offline Modus
+  </span>
+
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="stayOffline()">&times;</button>
+          <h4 class="modal-title">Synchronisation</h4>
+        </div>
+        <div class="modal-body">
+          <p>
+           Die Verbindung zum Server konnte wieder hergestellt werden. Während der Zeit im Offlinemodus wurden Änderungen durchgeführt, die Online zur Verfügung gestellt werden müssen.
+          </p>
+          <p>
+            Es wurden folgende Geschäftsobjekte geändert:
+          </p>
+          <dl class="dl-horizontal">
+            <div ng-repeat="row in dirtyDocuments">
+              <dt>Messkonzept '{{row.meteringConcept.name}}'</dt>
+              <dd>{{row.labels.join(", ")}}</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" ng-click="goOnline()">Synchronisieren und online arbeiten</button>
+          <button type="button" class="btn" data-dismiss="modal" ng-click="stayOffline()">Offline bleiben</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+</div>

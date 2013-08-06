@@ -10,9 +10,8 @@
 <body ng-controller="MainCntl">
   <div class="container">
     <div class="header">
-      <div class="pull-right" ng-click="toogleOnlineModus()">
-        <span class="label" ng-show="online">Online Modus</span>
-        <span class="label label-warning" ng-show="!online">Offline Modus</span>
+      <div class="pull-right">
+        <online></online>
       </div>
       <h3><a href="/" tabIndex="-1">Messkonzept</a></h3>
     </div>
@@ -21,9 +20,6 @@
     <div class="muted">
       <p>Demo app: v<span app-version></span></p>
     </div>
-    
-    <div ng-include src="'partials/synchronisation.html'"></div>
-
   </div>
 
 
@@ -37,7 +33,7 @@
   <script src="lib/angular/angular-resource.js"></script>
   <script src="lib/angular-ui/sortable.js"></script>
   <script src="lib/angular-ui/ui-utils.js"></script>
-  <script src="http://angular-ui.github.com/bootstrap/ui-bootstrap-tpls-0.5.0.js"></script>
+  <script src="lib/angular-ui/ui-bootstrap-0.5.0.js"></script>
   <script src="lib/bootstrap.min.js"></script>
 
   <script src="js/app.js"></script>
