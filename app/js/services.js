@@ -97,7 +97,7 @@ angular
       return {
         new: function() { return {}; },
         get: function(id, success) {
-          var meteringConcept = wrapper.get(id, function(doc) { meteringConcept = doc; success(doc);});
+          var meteringConcept = wrapper.get(id, function(doc) { meteringConcept = doc; (success || angular.noop)(doc);});
           return meteringConcept;
         },
         all: function() {
@@ -129,6 +129,10 @@ angular
       var res = $resource('api/customers/:_id', {});
       var wrapper = new Wrapper(res, $rootScope);
       return {
+        get: function(id, success) {
+          var resource = wrapper.get(id, function(doc) { resource = doc; (success || angular.noop)(doc);});
+          return resource;
+        },
         create: function(id) {
           wrapper.save({_id: id + "_customer", meteringConceptId: id, createdAt: new Date()});
         },
@@ -147,6 +151,10 @@ angular
       var res = $resource('api/properties/:_id', {});
       var wrapper = new Wrapper(res, $rootScope);
       return {
+        get: function(id, success) {
+          var resource = wrapper.get(id, function(doc) { resource = doc; (success || angular.noop)(doc);});
+          return resource;
+        },
         create: function(id) {
           wrapper.save({
             _id: id + "_property",
@@ -170,6 +178,10 @@ angular
       var res = $resource('api/locationLists/:_id', {});
       var wrapper = new Wrapper(res, $rootScope);
       return {
+        get: function(id, success) {
+          var resource = wrapper.get(id, function(doc) { resource = doc; (success || angular.noop)(doc);});
+          return resource;
+        },
         create: function(id) {
           wrapper.save({
             _id: id + "_locationList",
@@ -200,6 +212,10 @@ angular
             {id: 'level3', label: '1OG'},
             {id: 'level4', label: '2OG'}
           ];
+        },
+        get: function(id, success) {
+          var resource = wrapper.get(id, function(doc) { resource = doc; (success || angular.noop)(doc);});
+          return resource;
         },
         create: function(id) {
           wrapper.save({
