@@ -32,14 +32,27 @@ angular.module('myApp.directives', [])
                 break;
               case 'available':
                 $scope.dirtyDocuments = $scope.getDirtyDocuments();
-                $scope.modal = jQuery("#myModal").modal();
+                if (angular.equals($scope.dirtyDocuments, {}))
+                  // switch directly to online if there are no changes
+                  $rootScope.onlineState = "online";
+                else {
+                  // open a dialog
+                  $scope.modal = jQuery("#myModal").modal();
+                }
                 break;
             }
           };
 
           $scope.goOnline = function() {
             console.log("Going online");
-
+            angular.forEach($scope.dirtyDocuments, function(row) {
+              console.log("Pushing data for concept", row.meteringConcept.name);
+              for (var ix = 0; ix < row.resources.length; ix++) {
+                var resource = row.resources[ix];
+                console.log("Pushing resource ", resource);
+                resource.type.push(resource.data);
+              }
+            });
             $scope.modal.modal('hide');
             $rootScope.onlineState = "online";
           };
@@ -70,23 +83,23 @@ angular.module('myApp.directives', [])
                 switch(entityType) {
                   case "":
                     row.labels.push("Allgemein");
-                    row.resources.push(meteringConcept);
+                    row.resources.push({data: meteringConcept, type: MeteringConcept});
                     break;
                   case "_customer":
                     row.labels.push("Kunde");
-                    row.resources.push(Customer.get(id));
+                    row.resources.push({data: Customer.get(id), type: Customer});
                     break;
                   case "_property":
                     row.labels.push("Liegenschaft");
-                    row.resources.push(Property.get(id));
+                    row.resources.push({data: Property.get(id), type: Property});
                     break;
                   case "_locationList":
                     row.labels.push("Messstellen");
-                    row.resources.push(LocationList.get(id));
+                    row.resources.push({data: LocationList.get(id), type: LocationList});
                     break;
                   case "_levelList":
                     row.labels.push("Etagen");
-                    row.resources.push(LevelList.get(id));
+                    row.resources.push({data: LevelList.get(id), type: LevelList});
                     break;
                 }
               }

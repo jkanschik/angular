@@ -19,8 +19,13 @@ var matchParams = function(doc, params) {
 };
 
 var Wrapper = function(resource, rootScope) {this.rootScope = rootScope; this.resource = resource};
+Wrapper.prototype.push = function(data) {
+  delete data.notSynchronized;
+  localStorage.setItem(data['_id'], JSON.stringify(data));
+  this.resource.save(data);
+};
 Wrapper.prototype.get = function(id, callback) {
-  if (this.rootScope.online) {
+  if (this.rootScope.onlineState == 'online') {
     console.log("Wrapper 'get', online API access, id: ", id);
     return this.resource.get({'_id': id}, function(doc) {
       localStorage.setItem(id, JSON.stringify(doc));
@@ -37,7 +42,7 @@ Wrapper.prototype.save = function(data, success) {
   data.updatedAt = new Date();
   data._id = data._id || generateUuid();
   success = success || function() {};
-  if (this.rootScope.online) {
+  if (this.rootScope.onlineState == 'online') {
     console.log("Wrapper 'save', offline storage and online API access, data: ", data);
     localStorage.setItem(data['_id'], JSON.stringify(data));
     this.resource.save(data, function(result) {
@@ -53,14 +58,14 @@ Wrapper.prototype.save = function(data, success) {
 Wrapper.prototype.delete = function(id, callback) {
   console.log("Wrapper 'delete': removing from local storage with id ", id);
   localStorage.removeItem(id);
-  if (this.rootScope.online) {
+  if (this.rootScope.onlineState == 'online') {
     console.log("Wrapper 'delete', online API access, id: ", id);
     this.resource.delete({_id: id}, callback || angular.noop);
   }
 };
 Wrapper.prototype.query = function(params, success) {
   success = success || function() {};
-  if (this.rootScope.online) {
+  if (this.rootScope.onlineState == 'online') {
     console.log("Wrapper.query: online access for query ", params);
     return this.resource.query(params, function(docs) {
       console.log("Wrapper.query got documents ", docs);
@@ -95,13 +100,14 @@ angular
       var res = $resource('api/metering_concepts/:_id', {});
       var wrapper = new Wrapper(res, $rootScope);
       return {
+        push: function(data) { wrapper.push(data); },
         new: function() { return {}; },
         get: function(id, success) {
           var meteringConcept = wrapper.get(id, function(doc) { meteringConcept = doc; (success || angular.noop)(doc);});
           return meteringConcept;
         },
         all: function() {
-          return $rootScope.online ? res.query({}) : [];
+          return $rootScope.onlineState == 'online' ? res.query({}) : [];
         },
         create: function(success) {
           this.save({createdAt: new Date(), updatedAt: new Date()}, function(doc) {
@@ -129,6 +135,7 @@ angular
       var res = $resource('api/customers/:_id', {});
       var wrapper = new Wrapper(res, $rootScope);
       return {
+        push: function(data) { wrapper.push(data); },
         get: function(id, success) {
           var resource = wrapper.get(id, function(doc) { resource = doc; (success || angular.noop)(doc);});
           return resource;
@@ -151,6 +158,7 @@ angular
       var res = $resource('api/properties/:_id', {});
       var wrapper = new Wrapper(res, $rootScope);
       return {
+        push: function(data) { wrapper.push(data); },
         get: function(id, success) {
           var resource = wrapper.get(id, function(doc) { resource = doc; (success || angular.noop)(doc);});
           return resource;
@@ -178,6 +186,7 @@ angular
       var res = $resource('api/locationLists/:_id', {});
       var wrapper = new Wrapper(res, $rootScope);
       return {
+        push: function(data) { wrapper.push(data); },
         get: function(id, success) {
           var resource = wrapper.get(id, function(doc) { resource = doc; (success || angular.noop)(doc);});
           return resource;
@@ -205,6 +214,7 @@ angular
       var res = $resource('api/levelLists/:_id', {});
       var wrapper = new Wrapper(res, $rootScope);
       return {
+        push: function(data) { wrapper.push(data); },
         defaults: function() {
           return [
             {id: 'level1', label: '1UG'},
